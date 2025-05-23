@@ -6,9 +6,10 @@
   "scripts": {
     "start": "node dist/src/app.js",
     "dev": "ts-node src/app.ts",
-    "build": "tsc",
-    "postbuild": "echo 'Build completed successfully'",
-    "build:frontend": "cd frontend && npm run build",
+    "build": "npm run build:frontend",
+    "build:backend": "tsc",
+    "build:frontend": "cd frontend && npm install && npm run build",
+    "postbuild": "echo 'Frontend build completed successfully'",
     "watch": "tsc -w",
     "test": "jest",
     "lint": "eslint src/**/*.ts",
