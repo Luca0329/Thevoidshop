@@ -10,6 +10,14 @@ console.log('🌙 Starting TheVoidShop backend...');
 console.log('Environment:', process.env.NODE_ENV);
 console.log('Port:', process.env.PORT);
 
+// Debug Shopify configuration
+console.log('🛍️ Shopify Configuration Check:');
+console.log('- API Key:', process.env.SHOPIFY_API_KEY ? '✅ Set' : '❌ Missing');
+console.log('- API Secret:', process.env.SHOPIFY_API_SECRET ? '✅ Set' : '❌ Missing');
+console.log('- Shop Domain:', process.env.SHOPIFY_SHOP_DOMAIN ? '✅ Set' : '❌ Missing');
+console.log('- Access Token:', process.env.SHOPIFY_ACCESS_TOKEN ? '✅ Set' : '❌ Missing');
+console.log('- Storefront Token:', process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN ? '✅ Set' : '❌ Missing');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -21,7 +29,7 @@ app.use(helmet({
 // CORS configuration
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://thevoidshop.netlify.app']
+    ? (process.env.ALLOWED_ORIGINS || 'https://thevoidshop.netlify.app').split(',')
     : ['http://localhost:5173'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -37,11 +45,23 @@ app.use(express.static('public'));
 
 // Health check endpoint
 app.get('/health', (req, res) => {
+  const shopifyStatus = {
+    apiKey: !!process.env.SHOPIFY_API_KEY,
+    apiSecret: !!process.env.SHOPIFY_API_SECRET,
+    shopDomain: !!process.env.SHOPIFY_SHOP_DOMAIN,
+    accessToken: !!process.env.SHOPIFY_ACCESS_TOKEN,
+    storefrontToken: !!process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN
+  };
+
+  const allConfigured = Object.values(shopifyStatus).every(Boolean);
+
   res.json({ 
     status: 'healthy', 
     service: 'TheVoidShop Backend',
     timestamp: new Date().toISOString(),
-    shopify: process.env.SHOPIFY_API_KEY ? 'configured' : 'not configured'
+    shopify: allConfigured ? 'fully configured' : 'partially configured',
+    shopifyDetails: shopifyStatus,
+    environment: process.env.NODE_ENV
   });
 });
 
@@ -61,20 +81,66 @@ app.get('/mystical-status', (req, res) => {
   }
 });
 
-// Basic API routes (without Shopify for now)
+// Import the product routes
+import productRoutes from './routes/products';
+
+// API Routes - Now with Shopify integration!
+app.use('/api', productRoutes);
+
+// Basic API fallback (if routes don't match)
 app.get('/api/products', (req, res) => {
+  // This will be overridden by the routes/products.ts
+  res.json({
+    success: true,
+    products: [],
+    message: 'Fallback route - check /api/products route',
+    moonPhase: 'new-moon',
+    mysticalEnergy: 'flowing'
+  });
+});
+
+// Test Shopify connection endpoint
+app.get('/test-shopify', async (req, res) => {
   try {
-    // Return empty array so frontend falls back to static products
-    res.json({
-      success: true,
-      products: [],
-      message: 'Using static product catalog - Shopify not configured',
-      moonPhase: 'new-moon',
-      mysticalEnergy: 'flowing'
+    if (!process.env.SHOPIFY_ACCESS_TOKEN || !process.env.SHOPIFY_SHOP_DOMAIN) {
+      return res.status(400).json({
+        error: 'Shopify not configured',
+        missing: {
+          accessToken: !process.env.SHOPIFY_ACCESS_TOKEN,
+          shopDomain: !process.env.SHOPIFY_SHOP_DOMAIN
+        }
+      });
+    }
+
+    // Simple test call to Shopify
+    const shopifyUrl = `https://${process.env.SHOPIFY_SHOP_DOMAIN}/admin/api/2023-10/shop.json`;
+    const response = await fetch(shopifyUrl, {
+      headers: {
+        'X-Shopify-Access-Token': process.env.SHOPIFY_ACCESS_TOKEN,
+        'Content-Type': 'application/json'
+      }
     });
+
+    if (response.ok) {
+      const shopData = await response.json();
+      res.json({
+        success: true,
+        message: 'Shopify connection successful!',
+        shop: shopData.shop?.name || 'Connected',
+        timestamp: new Date().toISOString()
+      });
+    } else {
+      res.status(response.status).json({
+        error: 'Shopify connection failed',
+        status: response.status,
+        statusText: response.statusText
+      });
+    }
   } catch (error) {
-    console.error('Error in /api/products:', error);
-    res.status(500).json({ error: 'Failed to fetch products' });
+    res.status(500).json({
+      error: 'Shopify test failed',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    });
   }
 });
 
