@@ -1,0 +1,22 @@
+# Don't copy React files to Docker
+frontend/
+src/pages/
+src/components/
+src/context/
+src/data/
+src/*.tsx
+src/*.css
+src/App.*
+src/main.*
+src/index.*
+src/vite-env.d.ts
+
+# Don't copy unnecessary files
+node_modules/
+.git/
+.env
+*.log
+dist/
+.vscode/
+.idea/
+README.md

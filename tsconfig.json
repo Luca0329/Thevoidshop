@@ -27,11 +27,16 @@
   "exclude": [
     "node_modules",
     "dist",
-    "frontend",
+    "frontend/**/*",
     "**/*.tsx",
-    "**/pages/**",
-    "**/components/**",
-    "**/context/**",
-    "**/*.css"
+    "**/*.css",
+    "**/pages/**/*",
+    "**/components/**/*",
+    "**/context/**/*",
+    "**/data/**/*",
+    "src/App.*",
+    "src/main.*",
+    "src/index.*",
+    "src/vite-env.d.ts"
   ]
 }
