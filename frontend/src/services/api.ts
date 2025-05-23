@@ -33,9 +33,17 @@ export class VoidShopAPI {
   // Get mystical status (moon phase, energy levels)
   static async getMysticalStatus() {
     try {
-      const response = await fetch(`${API_BASE_URL}/mystical-status`);
+      const response = await fetch(`${API_BASE_URL}/mystical-status`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        mode: 'cors',
+        credentials: 'include'
+      });
+      
       if (!response.ok) {
-        throw new Error('Failed to fetch mystical status');
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
       return await response.json();
     } catch (error) {
@@ -57,11 +65,16 @@ export class VoidShopAPI {
       if (filters?.ritualUse) params.append('ritualUse', filters.ritualUse);
 
       const response = await fetch(`${API_BASE_URL}/api/products?${params}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        mode: 'cors',
         credentials: 'include'
       });
       
       if (!response.ok) {
-        throw new Error('Failed to fetch products from Shopify');
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
       
       const data = await response.json();
@@ -120,7 +133,13 @@ export class VoidShopAPI {
   // Health check to see if backend is connected
   static async healthCheck() {
     try {
-      const response = await fetch(`${API_BASE_URL}/health`);
+      const response = await fetch(`${API_BASE_URL}/health`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        mode: 'cors'
+      });
       return response.ok;
     } catch (error) {
       console.error('Backend health check failed:', error);

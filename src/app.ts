@@ -6,9 +6,10 @@ import dotenv from 'dotenv';
 // Load environment variables first
 dotenv.config();
 
-console.log('🌙 Starting TheVoidShop backend v3.0...');
+console.log('🌙 Starting TheVoidShop backend v2.0...');
 console.log('Environment:', process.env.NODE_ENV);
 console.log('Port:', process.env.PORT);
+console.log('Allowed Origins:', process.env.ALLOWED_ORIGINS);
 console.log('🔥 Force rebuild - all endpoints should work now!');
 
 const app = express();
@@ -19,15 +20,33 @@ app.use(helmet({
   contentSecurityPolicy: false
 }));
 
-// CORS configuration  
+// CORS configuration - fix the Railway/Netlify connection
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? (process.env.ALLOWED_ORIGINS || 'https://thevoidshop.netlify.app').split(',')
-    : ['http://localhost:5173'],
+  origin: [
+    'https://thevoidshop.netlify.app',
+    'https://railway.com',
+    'http://localhost:5173',
+    'http://localhost:3000'
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  optionsSuccessStatus: 200
 }));
+
+// Add explicit preflight handler
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://thevoidshop.netlify.app');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 
 // Body parsing middleware
 app.use(express.json({ limit: '1mb' }));
@@ -174,6 +193,22 @@ app.get('/api/products', async (req, res) => {
       message: 'Fallback to static catalog'
     });
   }
+});
+
+// Debug endpoint to check environment variables
+app.get('/debug', (req, res) => {
+  res.json({
+    message: 'Debug endpoint',
+    environment: process.env.NODE_ENV,
+    port: process.env.PORT,
+    hasShopifyToken: !!process.env.SHOPIFY_ACCESS_TOKEN,
+    hasShopDomain: !!process.env.SHOPIFY_SHOP_DOMAIN,
+    allowedOrigins: process.env.ALLOWED_ORIGINS,
+    actualAllowedOrigins: process.env.NODE_ENV === 'production' 
+      ? ['https://thevoidshop.netlify.app', 'https://railway.com']
+      : ['http://localhost:5173', 'http://localhost:3000'],
+    timestamp: new Date().toISOString()
+  });
 });
 
 // 404 handler
