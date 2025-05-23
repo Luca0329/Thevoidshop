@@ -1,0 +1,67 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Environment variables - CRITICAL for TheVoidShop
+.env
+.env.local
+.env.development
+.env.production
+.env.*.local
+
+# Build output
+dist/
+frontend/dist/
+frontend/build/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# TheVoidShop sensitive files
+config/credentials.json
+secrets/
+*.pem
+*.key
+webhook-secrets.txt
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Cache
+.npm
+.cache/
+
+# Session store
+sessions/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Shopify credentials (never commit these!)
+shopify.app.toml
+.shopify/

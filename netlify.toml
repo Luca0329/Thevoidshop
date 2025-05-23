@@ -1,0 +1,27 @@
+[build]
+  base = "frontend"
+  publish = "frontend/dist"
+  command = "npm run build"
+
+[[functions]]
+  path = "functions"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[dev]
+  command = "npm run dev"
+  port = 5173
+
+# Redirect API calls to your backend server
+[[redirects]]
+  from = "/api/*"
+  to = "https://your-backend-url.herokuapp.com/api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/mystical-status"
+  to = "https://your-backend-url.herokuapp.com/mystical-status"
+  status = 200
+  force = true
