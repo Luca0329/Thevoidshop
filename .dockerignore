@@ -11,6 +11,13 @@ src/main.*
 src/index.*
 src/vite-env.d.ts
 
+# Don't copy old problematic backend files
+src/controllers/
+src/middleware/
+src/services/
+src/routes/
+config/
+
 # Don't copy unnecessary files
 node_modules/
 .git/

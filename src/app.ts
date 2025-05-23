@@ -91,11 +91,11 @@ app.get('/test-shopify', async (req, res) => {
     });
 
     if (response.ok) {
-      const shopData = await response.json();
+      const shopData = await response.json() as any;
       res.json({
         success: true,
         message: 'Shopify connection successful!',
-        shop: shopData.shop?.name || 'Connected',
+        shop: shopData?.shop?.name || 'Connected',
         timestamp: new Date().toISOString()
       });
     } else {
@@ -138,10 +138,10 @@ app.get('/api/products', async (req, res) => {
     });
 
     if (response.ok) {
-      const data = await response.json();
+      const data = await response.json() as any;
       res.json({
         success: true,
-        products: data.products || [],
+        products: data?.products || [],
         message: 'Live products from Shopify',
         moonPhase: 'new-moon',
         mysticalEnergy: 'flowing',
