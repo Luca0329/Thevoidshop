@@ -11,6 +11,13 @@ src/main.*
 src/index.*
 src/vite-env.d.ts
 
+# Absolutely exclude React files
+**/pages/**
+**/components/**
+**/context/**
+**/*.tsx
+**/*.css
+
 # Don't copy unnecessary files
 node_modules/
 .git/

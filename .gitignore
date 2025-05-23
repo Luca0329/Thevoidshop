@@ -80,12 +80,14 @@ src/*.css
 src/App.*
 src/main.*
 src/vite-env.d.ts
+src/types/index.ts
 
-# These files are duplicated - only keep them in frontend/
-index.html
-postcss.config.js
-tailwind.config.js
-tsconfig.app.json
-tsconfig.node.json
-vite.config.ts
-eslint.config.js
+# Absolutely exclude these React files
+**/pages/**
+**/components/**  
+**/context/**
+**/*.tsx
+**/*.css
+**/App.*
+**/main.*
+**/vite-env.d.ts

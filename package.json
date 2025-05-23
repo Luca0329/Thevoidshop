@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/src/app.js",
     "dev": "ts-node src/app.ts",
-    "build": "tsc --project tsconfig.json",
+    "build": "tsc --project tsconfig.json --noEmit false",
     "build:frontend": "cd frontend && npm run build",
     "watch": "tsc -w",
     "test": "jest",
