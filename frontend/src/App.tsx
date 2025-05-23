@@ -9,12 +9,15 @@ import MusicPage from './pages/MusicPage';
 import AccessoriesPage from './pages/AccessoriesPage';
 import Footer from './components/Footer';
 import MusicPlayer from './components/MusicPlayer';
+import MoonPhaseBanner from './components/MoonPhaseBanner';
 
 function App() {
   return (
     <Router>
       <AppProvider>
         <div className="min-h-screen bg-black text-white">
+          {/* Add the moon phase banner at the top */}
+          <MoonPhaseBanner />
           <Header />
           <MoonPhaseDisplay />
 
