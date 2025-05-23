@@ -1,13 +1,14 @@
 {
   "name": "thevoidshop-shopify-integration",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "Mystical commerce integration with Shopify for TheVoidShop",
   "main": "dist/app.js",
   "scripts": {
     "start": "node dist/app.js",
     "dev": "ts-node src/app.ts",
-    "build": "tsc",
-    "postbuild": "echo 'TheVoidShop backend v2.1 ready!'",
+    "build": "rm -rf dist && tsc",
+    "prebuild": "echo 'Force cleaning for Railway v3.0...'",
+    "postbuild": "echo 'TheVoidShop backend v3.0 deployed successfully!'",
     "clean": "rm -rf dist node_modules package-lock.json"
   },
   "keywords": ["shopify", "ecommerce", "mystical", "thevoidshop", "api"],

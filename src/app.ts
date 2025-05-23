@@ -6,9 +6,10 @@ import dotenv from 'dotenv';
 // Load environment variables first
 dotenv.config();
 
-console.log('🌙 Starting TheVoidShop backend v2.0...');
+console.log('🌙 Starting TheVoidShop backend v3.0...');
 console.log('Environment:', process.env.NODE_ENV);
 console.log('Port:', process.env.PORT);
+console.log('🔥 Force rebuild - all endpoints should work now!');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -35,14 +36,15 @@ app.use(express.urlencoded({ extended: true }));
 // Root endpoint
 app.get('/', (req, res) => {
   res.json({
-    message: 'TheVoidShop Backend v2.0 - Mystical Powers Activated!',
+    message: 'TheVoidShop Backend v3.0 - Force Rebuild Complete!',
     timestamp: new Date().toISOString(),
     endpoints: [
       '/health',
       '/mystical-status', 
       '/test-shopify',
       '/api/products'
-    ]
+    ],
+    status: 'All endpoints should be working now!'
   });
 });
 
@@ -51,29 +53,35 @@ app.get('/health', (req, res) => {
   res.json({ 
     status: 'healthy', 
     service: 'TheVoidShop Backend',
-    version: '2.0.0',
+    version: '3.0.0',
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV
+    environment: process.env.NODE_ENV,
+    message: 'Force rebuild successful!'
   });
 });
 
 // Mystical status endpoint
 app.get('/mystical-status', (req, res) => {
+  console.log('🔮 Mystical status endpoint hit - v3.0');
   res.json({
     app: 'TheVoidShop Shopify Integration',
     status: 'channeling cosmic energies',
     currentMoonPhase: 'new-moon',
     mysticalEnergy: 'flowing',
     timestamp: new Date().toISOString(),
-    version: '2.0.0'
+    version: '3.0.0',
+    message: 'Mystical endpoint working in v3.0!'
   });
 });
 
 // Test Shopify connection endpoint
 app.get('/test-shopify', async (req, res) => {
+  console.log('🧪 Test Shopify endpoint hit - v3.0');
+  
   if (!process.env.SHOPIFY_ACCESS_TOKEN || !process.env.SHOPIFY_SHOP_DOMAIN) {
     return res.status(400).json({
       error: 'Shopify not configured',
+      version: '3.0.0',
       missing: {
         accessToken: !process.env.SHOPIFY_ACCESS_TOKEN,
         shopDomain: !process.env.SHOPIFY_SHOP_DOMAIN
@@ -115,6 +123,8 @@ app.get('/test-shopify', async (req, res) => {
 
 // Products endpoint
 app.get('/api/products', async (req, res) => {
+  console.log('🛍️ Products endpoint hit - v3.0');
+  
   const hasShopifyConfig = process.env.SHOPIFY_ACCESS_TOKEN && process.env.SHOPIFY_SHOP_DOMAIN;
 
   if (!hasShopifyConfig) {
@@ -177,8 +187,9 @@ app.use((req, res) => {
 
 // Start server
 const server = app.listen(PORT, () => {
-  console.log(`🌙 TheVoidShop backend v2.0 running on port ${PORT}`);
+  console.log(`🌙 TheVoidShop backend v3.0 running on port ${PORT}`);
   console.log(`✨ All endpoints active and mystical!`);
+  console.log(`🔥 This is a force rebuild - endpoints should work now!`);
 }).on('error', (error: any) => {
   console.error('💀 Server failed to start:', error);
   process.exit(1);
