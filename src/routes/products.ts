@@ -27,8 +27,8 @@ router.get('/products', async (req, res) => {
     // Production session with real credentials
     const productionSession = {
       id: `offline_${process.env.SHOPIFY_SHOP_DOMAIN}`,
-      shop: process.env.SHOPIFY_SHOP_DOMAIN,
-      accessToken: process.env.SHOPIFY_ACCESS_TOKEN,
+      shop: process.env.SHOPIFY_SHOP_DOMAIN!,  // Add ! to assert it's defined
+      accessToken: process.env.SHOPIFY_ACCESS_TOKEN!,  // Add ! to assert it's defined
       isOnline: false
     };
 
