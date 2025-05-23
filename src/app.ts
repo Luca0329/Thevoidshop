@@ -68,9 +68,10 @@ app.get('/health', (req, res) => {
 // Import the product routes at the top with other imports
 import productRoutes from './routes/products';
 
-// Mystical status endpoint (move this BEFORE the product routes)
+// Mystical status endpoint FIRST
 app.get('/mystical-status', (req, res) => {
   try {
+    console.log('🔮 Mystical status endpoint called');
     res.json({
       app: 'TheVoidShop Shopify Integration',
       status: 'channeling cosmic energies',
@@ -87,6 +88,8 @@ app.get('/mystical-status', (req, res) => {
 // Test Shopify connection endpoint
 app.get('/test-shopify', async (req, res) => {
   try {
+    console.log('🧪 Test Shopify endpoint called');
+    
     if (!process.env.SHOPIFY_ACCESS_TOKEN || !process.env.SHOPIFY_SHOP_DOMAIN) {
       return res.status(400).json({
         error: 'Shopify not configured',
@@ -99,6 +102,8 @@ app.get('/test-shopify', async (req, res) => {
 
     // Simple test call to Shopify
     const shopifyUrl = `https://${process.env.SHOPIFY_SHOP_DOMAIN}/admin/api/2023-10/shop.json`;
+    console.log('Testing Shopify connection to:', shopifyUrl);
+    
     const response = await fetch(shopifyUrl, {
       headers: {
         'X-Shopify-Access-Token': process.env.SHOPIFY_ACCESS_TOKEN,
@@ -122,9 +127,84 @@ app.get('/test-shopify', async (req, res) => {
       });
     }
   } catch (error) {
+    console.error('Shopify test error:', error);
     res.status(500).json({
       error: 'Shopify test failed',
       message: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+});
+
+// Direct products endpoint (bypass router for now)
+app.get('/api/products', async (req, res) => {
+  try {
+    console.log('🛍️ Direct products endpoint called');
+    
+    // Check if we have Shopify credentials
+    const hasShopifyConfig = process.env.SHOPIFY_ACCESS_TOKEN && 
+                            process.env.SHOPIFY_SHOP_DOMAIN;
+
+    console.log('Shopify config check:', {
+      hasAccessToken: !!process.env.SHOPIFY_ACCESS_TOKEN,
+      hasShopDomain: !!process.env.SHOPIFY_SHOP_DOMAIN
+    });
+
+    if (!hasShopifyConfig) {
+      console.log('📦 No Shopify config - returning static products');
+      return res.json({
+        success: true,
+        products: [],
+        message: 'Using static product catalog - Shopify not fully configured',
+        moonPhase: 'new-moon',
+        mysticalEnergy: 'flowing',
+        shopifyConfigured: false
+      });
+    }
+
+    // Try to fetch from Shopify
+    const shopifyUrl = `https://${process.env.SHOPIFY_SHOP_DOMAIN}/admin/api/2023-10/products.json?limit=10`;
+    console.log('Fetching from Shopify:', shopifyUrl);
+    
+    const response = await fetch(shopifyUrl, {
+      headers: {
+        'X-Shopify-Access-Token': process.env.SHOPIFY_ACCESS_TOKEN!,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log('✅ Shopify products fetched successfully:', data.products?.length || 0);
+      
+      res.json({
+        success: true,
+        products: data.products || [],
+        message: 'Live products from Shopify',
+        moonPhase: 'new-moon',
+        mysticalEnergy: 'flowing',
+        shopifyConfigured: true
+      });
+    } else {
+      console.error('❌ Shopify API error:', response.status, response.statusText);
+      res.json({
+        success: true,
+        products: [],
+        message: `Shopify API error: ${response.status}`,
+        moonPhase: 'new-moon',
+        mysticalEnergy: 'disrupted',
+        shopifyConfigured: true
+      });
+    }
+
+  } catch (error) {
+    console.error('💀 Products endpoint error:', error);
+    res.json({
+      success: true,
+      products: [],
+      error: 'Products temporarily unavailable',
+      message: 'Fallback to static catalog',
+      moonPhase: 'new-moon',
+      mysticalEnergy: 'flowing'
     });
   }
 });
