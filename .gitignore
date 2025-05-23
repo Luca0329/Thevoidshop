@@ -75,11 +75,11 @@ src/pages/
 src/components/
 src/context/
 src/data/
-src/main.tsx
-src/App.tsx
-src/index.css
+src/*.tsx
+src/*.css
+src/App.*
+src/main.*
 src/vite-env.d.ts
-src/types/index.ts
 
 # These files are duplicated - only keep them in frontend/
 index.html

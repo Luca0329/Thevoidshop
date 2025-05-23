@@ -4,7 +4,7 @@
     "module": "commonjs",
     "lib": ["ES2020"],
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": "./",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -16,13 +16,22 @@
     "types": ["node"]
   },
   "include": [
-    "src/**/*.ts",
+    "src/app.ts",
+    "src/services/**/*.ts",
+    "src/routes/**/*.ts",
+    "src/middleware/**/*.ts",
+    "src/controllers/**/*.ts",
+    "src/types/**/*.ts",
     "config/**/*.ts"
   ],
   "exclude": [
     "node_modules",
     "dist",
     "frontend",
-    "src/**/*.tsx"
+    "**/*.tsx",
+    "**/pages/**",
+    "**/components/**",
+    "**/context/**",
+    "**/*.css"
   ]
 }
