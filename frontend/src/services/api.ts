@@ -1,5 +1,5 @@
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://thevoidshop-production.up.railway.app'
+  ? 'https://thevoidshop.railway.app'
   : 'http://localhost:3000';
 
 export interface VoidShopProduct {

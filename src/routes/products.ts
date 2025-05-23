@@ -1,96 +1,81 @@
 import express from 'express';
-import { voidShopifyService } from '../services/shopify';
-import { VoidShopAuthMiddleware } from '../middleware/auth';
 
 const router = express.Router();
 
-// Get products with mystical enhancement
+console.log('🛍️ Products router loaded');
+
+// Products endpoint - this will be accessible at /api/products
 router.get('/products', async (req, res) => {
   try {
-    // Check if we have real Shopify credentials
-    const hasRealCredentials = process.env.SHOPIFY_API_KEY && 
-                              process.env.SHOPIFY_API_SECRET && 
-                              process.env.SHOPIFY_ACCESS_TOKEN &&
-                              process.env.SHOPIFY_SHOP_DOMAIN;
+    console.log('🛍️ Products endpoint called');
+    
+    // Check if we have Shopify credentials
+    const hasShopifyConfig = process.env.SHOPIFY_ACCESS_TOKEN && 
+                            process.env.SHOPIFY_SHOP_DOMAIN;
 
-    if (!hasRealCredentials) {
-      // Return empty products array so frontend uses static fallback
+    console.log('Shopify config check:', {
+      hasAccessToken: !!process.env.SHOPIFY_ACCESS_TOKEN,
+      hasShopDomain: !!process.env.SHOPIFY_SHOP_DOMAIN
+    });
+
+    if (!hasShopifyConfig) {
+      console.log('📦 No Shopify config - returning static products');
       return res.json({
         success: true,
         products: [],
-        message: 'Using static product catalog',
+        message: 'Using static product catalog - Shopify not fully configured',
         moonPhase: 'new-moon',
-        mysticalEnergy: 'flowing'
+        mysticalEnergy: 'flowing',
+        shopifyConfigured: false
       });
     }
 
-    // Production session with real credentials
-    const productionSession = {
-      id: `offline_${process.env.SHOPIFY_SHOP_DOMAIN}`,
-      shop: process.env.SHOPIFY_SHOP_DOMAIN!,  // Add ! to assert it's defined
-      accessToken: process.env.SHOPIFY_ACCESS_TOKEN!,  // Add ! to assert it's defined
-      isOnline: false
-    };
+    // Try to fetch from Shopify (simplified)
+    const shopifyUrl = `https://${process.env.SHOPIFY_SHOP_DOMAIN}/admin/api/2023-10/products.json?limit=10`;
+    
+    console.log('Fetching from Shopify:', shopifyUrl);
+    
+    const response = await fetch(shopifyUrl, {
+      headers: {
+        'X-Shopify-Access-Token': process.env.SHOPIFY_ACCESS_TOKEN!,
+        'Content-Type': 'application/json'
+      }
+    });
 
-    const filters = {
-      mysticCategory: req.query.mysticCategory as string,
-      limitedEdition: req.query.limitedEdition === 'true',
-      ritualUse: req.query.ritualUse as string
-    };
-
-    // Map frontend categories to Shopify mystical categories
-    const categoryMap: { [key: string]: string } = {
-      'music': 'digital-tools',
-      'apparel': 'apparel',
-      'accessories': 'accessories'
-    };
-
-    if (filters.mysticCategory && categoryMap[filters.mysticCategory]) {
-      filters.mysticCategory = categoryMap[filters.mysticCategory];
+    if (response.ok) {
+      const data = await response.json();
+      console.log('✅ Shopify products fetched successfully:', data.products?.length || 0);
+      
+      res.json({
+        success: true,
+        products: data.products || [],
+        message: 'Live products from Shopify',
+        moonPhase: 'new-moon',
+        mysticalEnergy: 'flowing',
+        shopifyConfigured: true
+      });
+    } else {
+      console.error('❌ Shopify API error:', response.status, response.statusText);
+      res.json({
+        success: true,
+        products: [],
+        message: `Shopify API error: ${response.status}`,
+        moonPhase: 'new-moon',
+        mysticalEnergy: 'disrupted',
+        shopifyConfigured: true
+      });
     }
 
-    const products = await voidShopifyService.getProducts(productionSession, filters);
-    
-    res.json({
-      success: true,
-      products,
-      moonPhase: 'new-moon',
-      mysticalEnergy: 'flowing'
-    });
   } catch (error) {
-    console.error('Failed to fetch products:', error);
-    // Always return empty array so frontend gracefully falls back to static
+    console.error('💀 Products endpoint error:', error);
     res.json({
       success: true,
       products: [],
-      error: 'Shopify temporarily unavailable',
+      error: 'Products temporarily unavailable',
+      message: 'Fallback to static catalog',
       moonPhase: 'new-moon',
       mysticalEnergy: 'flowing'
     });
-  }
-});
-
-// Get single product
-router.get('/products/:id', async (req, res) => {
-  try {
-    const mockSession = {
-      id: 'dev_session',
-      shop: 'thevoidshop-dev.myshopify.com',
-      accessToken: 'dev_token',
-      isOnline: false
-    };
-
-    const productId = parseInt(req.params.id);
-    const product = await voidShopifyService.getProductById(mockSession, productId);
-    
-    if (product) {
-      res.json({ success: true, product });
-    } else {
-      res.status(404).json({ success: false, error: 'Product not found' });
-    }
-  } catch (error) {
-    console.error('Failed to fetch product:', error);
-    res.status(500).json({ success: false, error: 'Failed to fetch product' });
   }
 });
 

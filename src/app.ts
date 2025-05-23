@@ -26,7 +26,7 @@ app.use(helmet({
   contentSecurityPolicy: false // Shopify embeds require this
 }));
 
-// CORS configuration
+// CORS configuration  
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
     ? (process.env.ALLOWED_ORIGINS || 'https://thevoidshop.netlify.app').split(',')
@@ -65,7 +65,10 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Mystical status endpoint
+// Import the product routes at the top with other imports
+import productRoutes from './routes/products';
+
+// Mystical status endpoint (move this BEFORE the product routes)
 app.get('/mystical-status', (req, res) => {
   try {
     res.json({
@@ -79,24 +82,6 @@ app.get('/mystical-status', (req, res) => {
     console.error('Error in mystical-status:', error);
     res.status(500).json({ error: 'Mystical energies disrupted' });
   }
-});
-
-// Import the product routes
-import productRoutes from './routes/products';
-
-// API Routes - Now with Shopify integration!
-app.use('/api', productRoutes);
-
-// Basic API fallback (if routes don't match)
-app.get('/api/products', (req, res) => {
-  // This will be overridden by the routes/products.ts
-  res.json({
-    success: true,
-    products: [],
-    message: 'Fallback route - check /api/products route',
-    moonPhase: 'new-moon',
-    mysticalEnergy: 'flowing'
-  });
 });
 
 // Test Shopify connection endpoint
@@ -143,6 +128,14 @@ app.get('/test-shopify', async (req, res) => {
     });
   }
 });
+
+// API Routes - Now with Shopify integration!
+try {
+  app.use('/api', productRoutes);
+  console.log('✅ Product routes loaded successfully');
+} catch (error) {
+  console.error('❌ Failed to load product routes:', error);
+}
 
 // Error handling middleware
 app.use((error: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
