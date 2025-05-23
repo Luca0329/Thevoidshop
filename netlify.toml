@@ -12,15 +12,15 @@
   to = "/index.html"
   status = 200
 
-# API proxy to Railway backend (add your Railway URL when ready)
+# API proxy to Railway backend
 [[redirects]]
   from = "/api/*"
-  to = "https://your-railway-app.railway.app/api/:splat"
+  to = "https://thevoidshop-production.up.railway.app/api/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/mystical-status"
-  to = "https://your-railway-app.railway.app/mystical-status"
+  to = "https://thevoidshop-production.up.railway.app/mystical-status"
   status = 200
   force = true
