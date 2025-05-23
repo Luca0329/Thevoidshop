@@ -16,27 +16,14 @@
     "types": ["node"]
   },
   "include": [
-    "src/app.ts",
-    "src/services/**/*.ts",
-    "src/routes/**/*.ts",
-    "src/middleware/**/*.ts",
-    "src/controllers/**/*.ts",
-    "src/types/**/*.ts",
+    "src/**/*.ts",
     "config/**/*.ts"
   ],
   "exclude": [
     "node_modules",
     "dist",
-    "frontend/**/*",
+    "frontend",
     "**/*.tsx",
-    "**/*.css",
-    "**/pages/**/*",
-    "**/components/**/*",
-    "**/context/**/*",
-    "**/data/**/*",
-    "src/App.*",
-    "src/main.*",
-    "src/index.*",
-    "src/vite-env.d.ts"
+    "**/*.css"
   ]
 }

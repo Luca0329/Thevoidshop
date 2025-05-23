@@ -1,4 +1,4 @@
-# Don't copy React files to Docker
+# Don't copy React frontend to Railway backend
 frontend/
 src/pages/
 src/components/
@@ -11,13 +11,6 @@ src/main.*
 src/index.*
 src/vite-env.d.ts
 
-# Absolutely exclude React files
-**/pages/**
-**/components/**
-**/context/**
-**/*.tsx
-**/*.css
-
 # Don't copy unnecessary files
 node_modules/
 .git/
@@ -27,3 +20,4 @@ dist/
 .vscode/
 .idea/
 README.md
+netlify.toml
