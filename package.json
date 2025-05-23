@@ -6,10 +6,9 @@
   "scripts": {
     "start": "node dist/src/app.js",
     "dev": "ts-node src/app.ts",
-    "build": "tsc",
-    "build:backend": "tsc",
-    "build:frontend": "cd frontend && npm install && npm run build",
-    "postbuild": "echo 'Backend build completed successfully'",
+    "build": "rm -rf dist && tsc",
+    "prebuild": "echo 'Cleaning dist directory...'",
+    "postbuild": "echo 'Backend build completed - Railway ready!'",
     "watch": "tsc -w",
     "test": "jest",
     "lint": "eslint src/**/*.ts",

@@ -66,9 +66,10 @@ coverage/
 shopify.app.toml
 .shopify/
 
-# TypeScript build outputs
+# TypeScript build outputs (force clean builds)
 dist/
 *.tsbuildinfo
+build/
 
 # React frontend files that don't belong in backend
 src/pages/

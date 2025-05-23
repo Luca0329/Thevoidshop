@@ -65,10 +65,7 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Import the product routes at the top with other imports
-import productRoutes from './routes/products';
-
-// Mystical status endpoint FIRST
+// Mystical status endpoint
 app.get('/mystical-status', (req, res) => {
   try {
     console.log('🔮 Mystical status endpoint called');
@@ -135,10 +132,10 @@ app.get('/test-shopify', async (req, res) => {
   }
 });
 
-// Direct products endpoint (bypass router for now)
+// Products endpoint
 app.get('/api/products', async (req, res) => {
   try {
-    console.log('🛍️ Direct products endpoint called');
+    console.log('🛍️ Products endpoint called');
     
     // Check if we have Shopify credentials
     const hasShopifyConfig = process.env.SHOPIFY_ACCESS_TOKEN && 
@@ -209,13 +206,19 @@ app.get('/api/products', async (req, res) => {
   }
 });
 
-// API Routes - Now with Shopify integration!
-try {
-  app.use('/api', productRoutes);
-  console.log('✅ Product routes loaded successfully');
-} catch (error) {
-  console.error('❌ Failed to load product routes:', error);
-}
+// Root endpoint - test if server is responding at all
+app.get('/', (req, res) => {
+  res.json({
+    message: 'TheVoidShop Backend is alive!',
+    timestamp: new Date().toISOString(),
+    endpoints: [
+      '/health',
+      '/mystical-status', 
+      '/test-shopify',
+      '/api/products'
+    ]
+  });
+});
 
 // Error handling middleware
 app.use((error: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -237,8 +240,9 @@ app.use((req, res) => {
 // Start server with error handling
 const server = app.listen(PORT, () => {
   console.log(`🌙 TheVoidShop backend running on port ${PORT}`);
-  console.log(`✨ Health check: http://localhost:${PORT}/health`);
-  console.log(`🔮 Mystical status: http://localhost:${PORT}/mystical-status`);
+  console.log(`✨ Health check available`);
+  console.log(`🔮 Mystical status available`);
+  console.log(`🛍️ Products API available`);
   
   if (process.env.SHOPIFY_API_KEY) {
     console.log(`🛍️ Shopify integration: READY`);
