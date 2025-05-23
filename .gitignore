@@ -70,7 +70,7 @@ shopify.app.toml
 dist/
 *.tsbuildinfo
 
-# React frontend in backend context
+# React frontend files that don't belong in backend
 src/pages/
 src/components/
 src/context/
@@ -79,3 +79,13 @@ src/main.tsx
 src/App.tsx
 src/index.css
 src/vite-env.d.ts
+src/types/index.ts
+
+# These files are duplicated - only keep them in frontend/
+index.html
+postcss.config.js
+tailwind.config.js
+tsconfig.app.json
+tsconfig.node.json
+vite.config.ts
+eslint.config.js

@@ -13,16 +13,16 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "jsx": "react-jsx",
     "types": ["node"]
   },
   "include": [
-    "src/**/*",
-    "config/**/*"
+    "src/**/*.ts",
+    "config/**/*.ts"
   ],
   "exclude": [
     "node_modules",
     "dist",
-    "frontend"
+    "frontend",
+    "src/**/*.tsx"
   ]
 }
