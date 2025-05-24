@@ -4,11 +4,15 @@ import { Disc3, Menu, X, ShoppingCart, User } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import MoonPhaseDisplay from './MoonPhaseDisplay';
 import { useCart } from '../context/CartContext';
+import CartDropdown from './CartDropdown';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isCartHovered, setIsCartHovered] = useState(false);
+  const [isCartClicked, setIsCartClicked] = useState(false);
   const { state, toggleAdmin } = useAppContext();
   const { getTotalItems } = useCart();
   const totalItems = getTotalItems();
@@ -33,88 +37,133 @@ const Header: React.FC = () => {
   }, []);
 
   const handleCartClick = () => {
-    // This will be replaced with Shopify's cart URL once integrated
-    window.open('https://your-shopify-store.myshopify.com/cart', '_blank');
+    setIsCartClicked(!isCartClicked);
+    setIsCartOpen(!isCartOpen);
   };
 
-  const handleProfileClick = () => {
-    // This will be replaced with Shopify's customer account URL once integrated
-    window.open('https://your-shopify-store.myshopify.com/account', '_blank');
+  const handleCartMouseEnter = () => {
+    setIsCartHovered(true);
+    if (!isCartClicked) {
+      setIsCartOpen(true);
+    }
+  };
+
+  const handleCartMouseLeave = () => {
+    setIsCartHovered(false);
+    // Only close if not clicked and not hovering over dropdown
+    setTimeout(() => {
+      if (!isCartClicked && !isCartHovered) {
+        setIsCartOpen(false);
+      }
+    }, 100); // Small delay to allow mouse to move to dropdown
+  };
+
+  const handleDropdownMouseEnter = () => {
+    setIsCartHovered(true);
+  };
+
+  const handleDropdownMouseLeave = () => {
+    setIsCartHovered(false);
+    if (!isCartClicked) {
+      setIsCartOpen(false);
+    }
+  };
+
+  const closeCart = () => {
+    setIsCartOpen(false);
+    setIsCartClicked(false);
+    setIsCartHovered(false);
   };
 
   return (
-    <header className="bg-black text-white shadow-lg sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="text-2xl font-bold text-purple-400">
-            THE VOID SHOP
-          </Link>
+    <>
+      <header className="bg-black text-white shadow-lg sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <Link to="/" className="text-2xl font-bold text-purple-400">
+              THE VOID SHOP
+            </Link>
 
-          {/* Moon Phase Display - Desktop */}
-          <div className="hidden md:block">
-            <MoonPhaseDisplay />
-          </div>
-
-          {/* Desktop Navigation and Cart */}
-          <div className="hidden md:flex items-center space-x-8">
-            <nav className="flex space-x-8">
-              <Link to="/" className="hover:text-purple-400 transition-colors">Home</Link>
-              <Link to="/music" className="hover:text-purple-400 transition-colors">Music</Link>
-              <Link to="/apparel" className="hover:text-purple-400 transition-colors">Apparel</Link>
-              <Link to="/accessories" className="hover:text-purple-400 transition-colors">Accessories</Link>
-            </nav>
-            
-            <div className="relative">
-              <button className="flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors">
-                <ShoppingCart size={20} />
-                {totalItems > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                    {totalItems}
-                  </span>
-                )}
-              </button>
+            {/* Moon Phase Display - Desktop */}
+            <div className="hidden md:block">
+              <MoonPhaseDisplay />
             </div>
-          </div>
 
-          {/* Mobile Menu Button */}
-          <button 
-            className="md:hidden text-white focus:outline-none"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
-            </svg>
-          </button>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isMobileMenuOpen && (
-          <nav className="md:hidden mt-4 pb-4 border-t border-gray-700">
-            <div className="flex flex-col space-y-2 pt-4">
-              <Link to="/" className="py-2 hover:text-purple-400 transition-colors">Home</Link>
-              <Link to="/music" className="py-2 hover:text-purple-400 transition-colors">Music</Link>
-              <Link to="/apparel" className="py-2 hover:text-purple-400 transition-colors">Apparel</Link>
-              <Link to="/accessories" className="py-2 hover:text-purple-400 transition-colors">Accessories</Link>
-
-              {/* Mobile Cart */}
-              <div className="flex items-center justify-between pt-2">
-                <span>Cart</span>
-                <div className="relative">
+            {/* Desktop Navigation and Cart */}
+            <div className="hidden md:flex items-center space-x-8">
+              <nav className="flex space-x-8">
+                <Link to="/" className="hover:text-purple-400 transition-colors">Home</Link>
+                <Link to="/music" className="hover:text-purple-400 transition-colors">Music</Link>
+                <Link to="/apparel" className="hover:text-purple-400 transition-colors">Apparel</Link>
+                <Link to="/accessories" className="hover:text-purple-400 transition-colors">Accessories</Link>
+              </nav>
+              
+              <div 
+                className="relative"
+                onMouseEnter={handleCartMouseEnter}
+                onMouseLeave={handleCartMouseLeave}
+              >
+                <button 
+                  onClick={handleCartClick}
+                  className="flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors"
+                >
                   <ShoppingCart size={20} />
                   {totalItems > 0 && (
                     <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                       {totalItems}
                     </span>
                   )}
-                </div>
+                </button>
               </div>
             </div>
-          </nav>
-        )}
-      </div>
-    </header>
+
+            {/* Mobile Menu Button */}
+            <button 
+              className="md:hidden text-white focus:outline-none"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                  d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+              </svg>
+            </button>
+          </div>
+
+          {/* Mobile Navigation */}
+          {isMobileMenuOpen && (
+            <nav className="md:hidden mt-4 pb-4 border-t border-gray-700">
+              <div className="flex flex-col space-y-2 pt-4">
+                <Link to="/" className="py-2 hover:text-purple-400 transition-colors">Home</Link>
+                <Link to="/music" className="py-2 hover:text-purple-400 transition-colors">Music</Link>
+                <Link to="/apparel" className="py-2 hover:text-purple-400 transition-colors">Apparel</Link>
+                <Link to="/accessories" className="py-2 hover:text-purple-400 transition-colors">Accessories</Link>
+
+                {/* Mobile Cart */}
+                <div className="flex items-center justify-between pt-2">
+                  <span>Cart</span>
+                  <div className="relative">
+                    <ShoppingCart size={20} />
+                    {totalItems > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        {totalItems}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </nav>
+          )}
+        </div>
+      </header>
+
+      <CartDropdown 
+        isOpen={isCartOpen} 
+        onClose={closeCart}
+        onMouseEnter={handleDropdownMouseEnter}
+        onMouseLeave={handleDropdownMouseLeave}
+      />
+    </>
   );
 };
 

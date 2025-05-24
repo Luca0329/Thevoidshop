@@ -154,11 +154,15 @@ const PRODUCTS_QUERY = `
               }
             }
           }
-          variants(first: 1) {
+          variants(first: 5) {
             edges {
               node {
                 id
                 availableForSale
+                priceV2 {
+                  amount
+                  currencyCode
+                }
               }
             }
           }
@@ -201,7 +205,8 @@ export const fetchShopifyProducts = async (limit = 10) => {
     }
 
     return data.data.products.edges.map((edge: any) => ({
-      id: edge.node.id,
+      id: edge.node.variants.edges[0]?.node.id, // Use variant ID, not product ID
+      productId: edge.node.id,
       title: edge.node.title,
       description: edge.node.description,
       price: parseFloat(edge.node.priceRange.minVariantPrice.amount),
