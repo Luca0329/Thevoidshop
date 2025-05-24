@@ -18,9 +18,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     alert(`${product.title} added to cart!`);
   };
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    console.log('🎯 ProductCard clicked:', product.handle);
+    // Don't prevent default here - let the Link handle navigation
+  };
+
   return (
     <Link 
       to={`/product/${product.handle}`}
+      onClick={handleCardClick}
       className="block bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700 hover:border-purple-500 transition-all duration-300 hover:shadow-purple-500/20 group"
     >
       {/* Product Image */}

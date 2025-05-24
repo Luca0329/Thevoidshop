@@ -28,6 +28,7 @@ function App() {
               <Route path="/accessories" element={<AccessoriesPage />} />
               <Route path="/product/:handle" element={<ProductDetailPage />} />
               <Route path="/success" element={<SuccessPage />} />
+              <Route path="*" element={<div>Page not found</div>} />
             </Routes>
             <Footer />
             <MusicPlayer />
