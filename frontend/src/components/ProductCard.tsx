@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Product } from '../types';
 import { ShoppingCart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
@@ -10,7 +9,6 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
-  const navigate = useNavigate();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -19,46 +17,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     alert(`${product.title} added to cart!`);
   };
 
-  const handleCardClick = (e: React.MouseEvent) => {
-    console.log('🎯 Card clicked!', product.handle);
-    console.log('🎯 Event target:', e.target);
-    console.log('🎯 Current target:', e.currentTarget);
-    console.log('🎯 Event bubbles:', e.bubbles);
-    console.log('🎯 Event default prevented:', e.defaultPrevented);
-    
-    // Check for parent interference
-    const target = e.target as HTMLElement;
-    console.log('🎯 Target classes:', target.className);
-    console.log('🎯 Target computed style pointer-events:', getComputedStyle(target).pointerEvents);
-    
-    // Build the URL directly without eval() or string construction
-    const productUrl = `/product/${product.handle}`;
-    console.log('🎯 Opening URL:', productUrl);
-    
-    try {
-      // Open in new window/tab - CSP compliant approach
-      const newWindow = window.open(productUrl, '_blank', 'noopener,noreferrer');
-      
-      if (newWindow) {
-        console.log('🎯 New window opened successfully');
-      } else {
-        console.log('🎯 Popup blocked, using same window navigation');
-        navigate(productUrl);
-      }
-    } catch (error) {
-      console.error('🎯 Window opening failed:', error);
-      // Fallback to same-window navigation
-      navigate(productUrl);
-    }
-  };
-
   return (
-    <div 
-      onClick={handleCardClick}
-      onMouseDown={() => console.log('🎯 Mouse down on card')}
-      onMouseUp={() => console.log('🎯 Mouse up on card')}
-      style={{ pointerEvents: 'auto' }}
-      className="cursor-pointer block bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700 hover:border-purple-500 transition-all duration-300 hover:shadow-purple-500/20 group"
+    <a 
+      href={`/product/${product.handle}`}
+      className="cursor-pointer block bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700 hover:border-purple-500 transition-all duration-300 hover:shadow-purple-500/20 group text-decoration-none"
     >
       {/* Product Image */}
       <div className="aspect-square bg-gray-900 relative overflow-hidden">
@@ -106,7 +68,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {product.available ? 'Add to Cart' : 'Out of Stock'}
         </button>
       </div>
-    </div>
+    </a>
   );
 };
 
