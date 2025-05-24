@@ -17,6 +17,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     alert(`${product.title} added to cart!`);
   };
 
+  const handleCardClick = () => {
+    window.location.href = `/product/${product.handle}`;
+  };
+
   return (
     <div style={{ border: '2px solid red', margin: '10px' }}>
       <button 
@@ -26,12 +30,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         CLICK TEST
       </button>
       
-      <a 
-        href={`/product/${product.handle}`}
-        className="cursor-pointer block bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700 hover:border-purple-500 transition-all duration-300 hover:shadow-purple-500/20 group text-decoration-none"
-      >
-        {/* Product Image */}
-        <div className="aspect-square bg-gray-900 relative overflow-hidden">
+      <div className="cursor-pointer block bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700 hover:border-purple-500 transition-all duration-300 hover:shadow-purple-500/20 group">
+        {/* Clickable Product Image */}
+        <div 
+          onClick={handleCardClick}
+          className="aspect-square bg-gray-900 relative overflow-hidden cursor-pointer"
+        >
           {product.image ? (
             <img 
               src={product.image} 
@@ -45,8 +49,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           )}
         </div>
         
-        {/* Product Info */}
-        <div className="p-4">
+        {/* Clickable Product Info */}
+        <div 
+          onClick={handleCardClick}
+          className="p-4 cursor-pointer"
+        >
           <h3 className="text-lg font-bold text-white mb-2 line-clamp-2 group-hover:text-purple-300 transition-colors">
             {product.title}
           </h3>
@@ -76,7 +83,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             {product.available ? 'Add to Cart' : 'Out of Stock'}
           </button>
         </div>
-      </a>
+      </div>
     </div>
   );
 };
