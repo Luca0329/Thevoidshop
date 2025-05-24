@@ -9,7 +9,7 @@ import HomePage from './pages/HomePage';
 import ApparelPage from './pages/ApparelPage';
 import MusicPage from './pages/MusicPage';
 import AccessoriesPage from './pages/AccessoriesPage';
-import ProductDetailPage from './pages/ProductDetail';
+import ProductDetailTemp from './pages/ProductDetailTemp';
 // import SuccessPage from './pages/SuccessPage';
 
 function App() {
@@ -26,9 +26,8 @@ function App() {
               <Route path="/apparel" element={<ApparelPage />} />
               <Route path="/music" element={<MusicPage />} />
               <Route path="/accessories" element={<AccessoriesPage />} />
-              <Route path="/product/:handle" element={<ProductDetailPage />} />
+              <Route path="/product/:handle" element={<ProductDetailTemp />} />
               {/* <Route path="/success" element={<SuccessPage />} /> */}
-              <Route path="*" element={<div>Page not found</div>} />
             </Routes>
             <Footer />
             <MusicPlayer />
