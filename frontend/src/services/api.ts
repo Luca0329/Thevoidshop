@@ -138,6 +138,8 @@ const PRODUCTS_QUERY = `
           title
           description
           handle
+          productType
+          tags
           priceRange {
             minVariantPrice {
               amount
@@ -206,7 +208,9 @@ export const fetchShopifyProducts = async (limit = 10) => {
       currency: edge.node.priceRange.minVariantPrice.currencyCode,
       image: edge.node.images.edges[0]?.node.url || '',
       available: edge.node.variants.edges[0]?.node.availableForSale || false,
-      handle: edge.node.handle
+      handle: edge.node.handle,
+      tags: edge.node.tags,
+      productType: edge.node.productType
     }));
   } catch (error) {
     console.error('❌ Error fetching Shopify products:', error);

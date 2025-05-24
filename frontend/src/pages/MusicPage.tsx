@@ -3,7 +3,30 @@ import { useShopifyProducts } from '../hooks/useShopifyProducts';
 import ProductGrid from '../components/ProductGrid';
 
 const MusicPage: React.FC = () => {
-  const { products, loading } = useShopifyProducts('music');
+  const { products, loading, error } = useShopifyProducts();
+  
+  // Debug: Log the first product to see its structure
+  React.useEffect(() => {
+    if (products.length > 0) {
+      console.log('🎵 First product structure:', products[0]);
+      console.log('🎵 Available fields:', Object.keys(products[0]));
+    }
+  }, [products]);
+
+  // Filter products for music-related items
+  const musicProducts = products.filter(product => {
+    console.log('🎵 Checking product:', product.title, 'Tags:', product.tags);
+    const tags = product.tags?.toLowerCase() || '';
+    const title = product.title?.toLowerCase() || '';
+    const description = product.description?.toLowerCase() || '';
+    
+    return tags.includes('music') || 
+           tags.includes('album') || 
+           tags.includes('digital') ||
+           tags.includes('tape') ||
+           title.includes('music') ||
+           description.includes('music');
+  });
 
   return (
     <main className="pt-24">
@@ -24,8 +47,12 @@ const MusicPage: React.FC = () => {
               🎵 Summoning mystical tracks...
             </div>
           </div>
+        ) : error ? (
+          <div className="text-red-500 text-center py-20">
+            {error}
+          </div>
         ) : (
-          <ProductGrid products={products} activeCategory="music" />
+          <ProductGrid products={musicProducts} activeCategory="music" />
         )}
       </div>
     </main>
