@@ -1,11 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
-import { CartProvider } from './context/CartContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import MusicPlayer from './components/MusicPlayer';
-import PromoBanner from './components/PromoBanner';
 import HomePage from './pages/HomePage';
 import ApparelPage from './pages/ApparelPage';
 import MusicPage from './pages/MusicPage';
@@ -17,7 +15,6 @@ function App() {
   return (
     <Router>
       <AppProvider>
-        <CartProvider>
           <div className="min-h-screen bg-black text-white">
             <Header />
             <Routes>
@@ -29,7 +26,6 @@ function App() {
             <Footer />
             <MusicPlayer />
           </div>
-        </CartProvider>
       </AppProvider>
     </Router>
   );

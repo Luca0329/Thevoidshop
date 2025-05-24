@@ -3,19 +3,12 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Disc3, Menu, X, ShoppingCart, User } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import MoonPhaseDisplay from './MoonPhaseDisplay';
-import { useCart } from '../context/CartContext';
-import CartDropdown from './CartDropdown';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isCartHovered, setIsCartHovered] = useState(false);
-  const [isCartClicked, setIsCartClicked] = useState(false);
   const { state, toggleAdmin } = useAppContext();
-  const { getTotalItems } = useCart();
-  const totalItems = getTotalItems();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -36,45 +29,6 @@ const Header: React.FC = () => {
     };
   }, []);
 
-  const handleCartClick = () => {
-    setIsCartClicked(!isCartClicked);
-    setIsCartOpen(!isCartOpen);
-  };
-
-  const handleCartMouseEnter = () => {
-    setIsCartHovered(true);
-    if (!isCartClicked) {
-      setIsCartOpen(true);
-    }
-  };
-
-  const handleCartMouseLeave = () => {
-    setIsCartHovered(false);
-    // Only close if not clicked and not hovering over dropdown
-    setTimeout(() => {
-      if (!isCartClicked && !isCartHovered) {
-        setIsCartOpen(false);
-      }
-    }, 100); // Small delay to allow mouse to move to dropdown
-  };
-
-  const handleDropdownMouseEnter = () => {
-    setIsCartHovered(true);
-  };
-
-  const handleDropdownMouseLeave = () => {
-    setIsCartHovered(false);
-    if (!isCartClicked) {
-      setIsCartOpen(false);
-    }
-  };
-
-  const closeCart = () => {
-    setIsCartOpen(false);
-    setIsCartClicked(false);
-    setIsCartHovered(false);
-  };
-
   return (
     <>
       <header className="bg-black text-white shadow-lg sticky top-0 z-50">
@@ -90,7 +44,7 @@ const Header: React.FC = () => {
               <MoonPhaseDisplay />
             </div>
 
-            {/* Desktop Navigation and Cart */}
+            {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
               <nav className="flex space-x-8">
                 <Link to="/" className="hover:text-purple-400 transition-colors">Home</Link>
@@ -98,24 +52,6 @@ const Header: React.FC = () => {
                 <Link to="/apparel" className="hover:text-purple-400 transition-colors">Apparel</Link>
                 <Link to="/accessories" className="hover:text-purple-400 transition-colors">Accessories</Link>
               </nav>
-              
-              <div 
-                className="relative"
-                onMouseEnter={handleCartMouseEnter}
-                onMouseLeave={handleCartMouseLeave}
-              >
-                <button 
-                  onClick={handleCartClick}
-                  className="flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors"
-                >
-                  <ShoppingCart size={20} />
-                  {totalItems > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                      {totalItems}
-                    </span>
-                  )}
-                </button>
-              </div>
             </div>
 
             {/* Mobile Menu Button */}
@@ -138,31 +74,11 @@ const Header: React.FC = () => {
                 <Link to="/music" className="py-2 hover:text-purple-400 transition-colors">Music</Link>
                 <Link to="/apparel" className="py-2 hover:text-purple-400 transition-colors">Apparel</Link>
                 <Link to="/accessories" className="py-2 hover:text-purple-400 transition-colors">Accessories</Link>
-
-                {/* Mobile Cart */}
-                <div className="flex items-center justify-between pt-2">
-                  <span>Cart</span>
-                  <div className="relative">
-                    <ShoppingCart size={20} />
-                    {totalItems > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                        {totalItems}
-                      </span>
-                    )}
-                  </div>
-                </div>
               </div>
             </nav>
           )}
         </div>
       </header>
-
-      <CartDropdown 
-        isOpen={isCartOpen} 
-        onClose={closeCart}
-        onMouseEnter={handleDropdownMouseEnter}
-        onMouseLeave={handleDropdownMouseLeave}
-      />
     </>
   );
 };
