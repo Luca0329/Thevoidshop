@@ -1,0 +1,5 @@
+# Environment variables (keep .env.production for deployment reference)
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local

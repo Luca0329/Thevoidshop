@@ -9,10 +9,8 @@
 
 [build.environment]
   NODE_VERSION = "18"
-  VITE_API_URL = "https://thevoidshop.railway.app"
-  NODE_ENV = "production"
+  NPM_FLAGS = "--legacy-peer-deps"
 
-# Headers for CORS
 [[headers]]
   for = "/*"
   [headers.values]

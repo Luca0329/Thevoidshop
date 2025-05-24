@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { VoidShopAPI } from '../services/api';
 
-// Dynamic import to handle missing astronomy-engine gracefully
-let Astronomy: any = null;
-try {
-  Astronomy = require('astronomy-engine');
-} catch (error) {
-  console.warn('Astronomy-engine not available, using fallback calculations');
-}
-
 interface MoonPhaseDisplayProps {
   className?: string;
 }
@@ -108,55 +100,14 @@ export default function MoonPhaseDisplay({ className = '' }: MoonPhaseDisplayPro
     return () => clearInterval(interval);
   }, []);
 
-  // Calculate which constellation the moon is in using astronomy-engine
+  // Calculate which constellation the moon is in (without astronomy-engine for now)
   const getMoonConstellation = () => {
-    try {
-      if (Astronomy) {
-        const currentDate = new Date();
-        
-        // Get moon's ecliptic longitude using astronomy-engine
-        const moonLongitude = Astronomy.EclipticLongitude('Moon', currentDate);
-        
-        // Zodiac constellation lookup table based on ecliptic longitude ranges
-        const zodiacConstellations = [
-          { constellation: 'Aries ♈', minLong: 0, maxLong: 30 },
-          { constellation: 'Taurus ♉', minLong: 30, maxLong: 60 },
-          { constellation: 'Gemini ♊', minLong: 60, maxLong: 90 },
-          { constellation: 'Cancer ♋', minLong: 90, maxLong: 120 },
-          { constellation: 'Leo ♌', minLong: 120, maxLong: 150 },
-          { constellation: 'Virgo ♍', minLong: 150, maxLong: 180 },
-          { constellation: 'Libra ♎', minLong: 180, maxLong: 210 },
-          { constellation: 'Scorpio ♏', minLong: 210, maxLong: 240 },
-          { constellation: 'Sagittarius ♐', minLong: 240, maxLong: 270 },
-          { constellation: 'Capricorn ♑', minLong: 270, maxLong: 300 },
-          { constellation: 'Aquarius ♒', minLong: 300, maxLong: 330 },
-          { constellation: 'Pisces ♓', minLong: 330, maxLong: 360 }
-        ];
-        
-        // Find the constellation based on longitude
-        for (const { constellation, minLong, maxLong } of zodiacConstellations) {
-          if (moonLongitude >= minLong && moonLongitude < maxLong) {
-            return constellation;
-          }
-        }
-        
-        // Handle wraparound for Pisces
-        if (moonLongitude >= 330 || moonLongitude < 30) {
-          return moonLongitude >= 330 ? 'Pisces ♓' : 'Aries ♈';
-        }
-        
-        return 'Void ◯';
-      }
-    } catch (error) {
-      console.error('Astronomy engine calculation failed:', error);
-    }
-    
-    // Fallback calculation method when astronomy-engine is not available
+    // Simple fallback calculation
     const now = new Date();
     const dayOfYear = Math.floor((now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
     const constellationIndex = Math.floor((dayOfYear / 2.5) % 12);
-    const fallbackConstellations = ['Capricorn ♑', 'Aquarius ♒', 'Pisces ♓', 'Aries ♈', 'Taurus ♉', 'Gemini ♊', 'Cancer ♋', 'Leo ♌', 'Virgo ♍', 'Libra ♎', 'Scorpio ♏', 'Sagittarius ♐'];
-    return fallbackConstellations[constellationIndex];
+    const constellations = ['Capricorn ♑', 'Aquarius ♒', 'Pisces ♓', 'Aries ♈', 'Taurus ♉', 'Gemini ♊', 'Cancer ♋', 'Leo ♌', 'Virgo ♍', 'Libra ♎', 'Scorpio ♏', 'Sagittarius ♐'];
+    return constellations[constellationIndex];
   };
 
   // Get moon icon by phase
