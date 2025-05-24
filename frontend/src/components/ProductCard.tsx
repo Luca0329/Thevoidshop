@@ -22,13 +22,25 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const handleCardClick = (e: React.MouseEvent) => {
     console.log('🎯 Card clicked!', product.handle);
     console.log('🎯 Event target:', e.target);
-    console.log('🎯 Navigate function:', typeof navigate);
+    
+    // Build the URL directly without eval() or string construction
+    const productUrl = `/product/${product.handle}`;
+    console.log('🎯 Opening URL:', productUrl);
     
     try {
-      navigate(`/product/${product.handle}`);
-      console.log('🎯 Navigation called successfully');
+      // Open in new window/tab - CSP compliant approach
+      const newWindow = window.open(productUrl, '_blank', 'noopener,noreferrer');
+      
+      if (newWindow) {
+        console.log('🎯 New window opened successfully');
+      } else {
+        console.log('🎯 Popup blocked, using same window navigation');
+        navigate(productUrl);
+      }
     } catch (error) {
-      console.error('🎯 Navigation failed:', error);
+      console.error('🎯 Window opening failed:', error);
+      // Fallback to same-window navigation
+      navigate(productUrl);
     }
   };
 
