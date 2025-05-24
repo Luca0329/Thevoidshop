@@ -17,39 +17,61 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     alert(`${product.title} added to cart!`);
   };
 
+  const handleCardClick = () => {
+    window.location.href = `/product/${product.handle}`;
+  };
+
   return (
-    <div style={{ border: '5px solid yellow', padding: '20px', margin: '20px' }}>
-      <h1 
-        onClick={() => window.location.href = `/product/${product.handle}`}
-        style={{ 
-          background: 'blue', 
-          color: 'white', 
-          padding: '20px', 
-          cursor: 'pointer',
-          fontSize: '20px'
-        }}
-      >
-        CLICK ME TO GO TO: {product.title} - WEBHOOK TEST
-      </h1>
+    <div 
+      onClick={handleCardClick}
+      className="cursor-pointer block bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700 hover:border-purple-500 transition-all duration-300 hover:shadow-purple-500/20 group"
+    >
+      {/* Product Image */}
+      <div className="aspect-square bg-gray-900 relative overflow-hidden">
+        {product.image ? (
+          <img 
+            src={product.image} 
+            alt={product.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-gray-500">
+            No Image
+          </div>
+        )}
+      </div>
       
-      <img 
-        src={product.image} 
-        alt={product.title}
-        onClick={() => window.location.href = `/product/${product.handle}`}
-        style={{ 
-          width: '200px', 
-          height: '200px', 
-          cursor: 'pointer',
-          border: '3px solid green'
-        }}
-      />
-      
-      <button 
-        onClick={handleAddToCart}
-        style={{ background: 'red', color: 'white', padding: '10px' }}
-      >
-        Add to Cart
-      </button>
+      {/* Product Info */}
+      <div className="p-4">
+        <h3 className="text-lg font-bold text-white mb-2 line-clamp-2 group-hover:text-purple-300 transition-colors">
+          {product.title}
+        </h3>
+        
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-xl font-semibold text-purple-400">
+            ${product.price}
+          </span>
+          
+          {product.available ? (
+            <span className="text-green-400 text-sm">In Stock</span>
+          ) : (
+            <span className="text-red-400 text-sm">Out of Stock</span>
+          )}
+        </div>
+        
+        <button 
+          onClick={handleAddToCart}
+          disabled={!product.available}
+          className={`w-full py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center gap-2 ${
+            product.available 
+              ? 'bg-purple-600 hover:bg-purple-700 text-white' 
+              : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+          }`}
+        >
+          <ShoppingCart size={18} />
+          {product.available ? 'Add to Cart' : 'Out of Stock'}
+        </button>
+      </div>
     </div>
   );
 };
