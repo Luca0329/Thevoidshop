@@ -12,70 +12,18 @@ interface CartDropdownProps {
 const CartDropdown: React.FC<CartDropdownProps> = ({ isOpen, onClose, onMouseEnter, onMouseLeave }) => {
   const { items, updateQuantity, removeFromCart, getTotalPrice, clearCart } = useCart();
 
-  const handleCheckout = async () => {
-    alert('Checkout button clicked!');
-    console.log('🛒 Starting checkout with items:', items);
+  const handleCheckout = () => {
+    // Simple redirect to Shopify store for checkout
+    const shopifyDomain = import.meta.env.VITE_SHOPIFY_DOMAIN;
+    const checkoutUrl = `https://${shopifyDomain}/cart`;
     
-    try {
-      const shopifyDomain = import.meta.env.VITE_SHOPIFY_DOMAIN;
-      const storefrontToken = import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN;
-      
-      console.log('🛒 Shopify domain:', shopifyDomain);
-      console.log('🛒 Token exists:', !!storefrontToken);
-      
-      const checkoutMutation = `
-        mutation checkoutCreate($input: CheckoutCreateInput!) {
-          checkoutCreate(input: $input) {
-            checkout {
-              id
-              webUrl
-            }
-            checkoutUserErrors {
-              field
-              message
-            }
-          }
-        }
-      `;
-      
-      const lineItems = items.map(item => ({
-        variantId: item.id,
-        quantity: item.quantity
-      }));
-      
-      console.log('🛒 Line items:', lineItems);
-
-      const response = await fetch(`https://${shopifyDomain}/api/2023-10/graphql.json`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Shopify-Storefront-Access-Token': storefrontToken,
-        },
-        body: JSON.stringify({
-          query: checkoutMutation,
-          variables: {
-            input: { lineItems }
-          }
-        })
-      });
-
-      console.log('🛒 Response status:', response.status);
-      const data = await response.json();
-      console.log('🛒 Response data:', data);
-      
-      if (data.data?.checkoutCreate?.checkout) {
-        console.log('🛒 Checkout URL:', data.data.checkoutCreate.checkout.webUrl);
-        window.open(data.data.checkoutCreate.checkout.webUrl, '_blank');
-        clearCart();
-        onClose();
-      } else {
-        console.error('🛒 Checkout creation failed:', data.data?.checkoutCreate?.checkoutUserErrors);
-        alert('Checkout failed. Check console for details.');
-      }
-    } catch (error) {
-      console.error('🛒 Checkout error:', error);
-      alert('Unable to process checkout. Please try again.');
-    }
+    // Add items to Shopify cart URL
+    const cartItems = items.map(item => `${item.handle}:${item.quantity}`).join(',');
+    const finalUrl = `https://${shopifyDomain}/cart/add?items=${cartItems}`;
+    
+    window.open(finalUrl, '_blank');
+    clearCart();
+    onClose();
   };
 
   if (!isOpen) return null;
