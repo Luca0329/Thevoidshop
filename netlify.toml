@@ -11,7 +11,7 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    Content-Security-Policy = "script-src 'self' 'unsafe-eval' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src 'self' https://thevoidshop.railway.app;"
+    Content-Security-Policy = "script-src 'self' 'unsafe-eval' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src 'self' https://thevoidshop-production.up.railway.app;"
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
 
