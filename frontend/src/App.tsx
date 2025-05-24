@@ -2,15 +2,17 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
 import Header from './components/Header';
+import Footer from './components/Footer';
+import MusicPlayer from './components/MusicPlayer';
+import PromoBanner from './components/PromoBanner';
 import HomePage from './pages/HomePage';
 import ApparelPage from './pages/ApparelPage';
 import MusicPage from './pages/MusicPage';
 import AccessoriesPage from './pages/AccessoriesPage';
-import Footer from './components/Footer';
-import MusicPlayer from './components/MusicPlayer';
-import PromoBanner from './components/PromoBanner';
 
 function App() {
+  console.log('🌙 App component rendering...');
+  
   return (
     <Router>
       <AppProvider>
@@ -31,4 +33,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
