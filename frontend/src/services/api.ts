@@ -154,7 +154,7 @@ const PRODUCTS_QUERY = `
               }
             }
           }
-          variants(first: 5) {
+          variants(first: 1) {
             edges {
               node {
                 id
@@ -205,7 +205,7 @@ export const fetchShopifyProducts = async (limit = 10) => {
     }
 
     return data.data.products.edges.map((edge: any) => ({
-      id: edge.node.variants.edges[0]?.node.id, // Use variant ID, not product ID
+      id: edge.node.variants.edges[0]?.node.id, // Use variant ID for checkout
       productId: edge.node.id,
       title: edge.node.title,
       description: edge.node.description,
