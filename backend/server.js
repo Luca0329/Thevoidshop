@@ -2,8 +2,20 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 
+// Configure CORS to allow your Netlify domain
+const corsOptions = {
+  origin: [
+    'https://thevoidshop.netlify.app',
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'https://railway.com'
+  ],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
 // Enable CORS for all origins
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Health check endpoint
