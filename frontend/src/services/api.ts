@@ -119,4 +119,99 @@ export class VoidShopAPI {
   }
 }
 
+// Shopify Storefront API configuration
+const SHOPIFY_DOMAIN = import.meta.env.VITE_SHOPIFY_DOMAIN;
+const STOREFRONT_TOKEN = import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN;
+
+const shopifyHeaders = {
+  'Content-Type': 'application/json',
+  'X-Shopify-Storefront-Access-Token': STOREFRONT_TOKEN,
+};
+
+// Shopify GraphQL query for products
+const PRODUCTS_QUERY = `
+  query getProducts($first: Int!) {
+    products(first: $first) {
+      edges {
+        node {
+          id
+          title
+          description
+          handle
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+          }
+          images(first: 1) {
+            edges {
+              node {
+                url
+                altText
+              }
+            }
+          }
+          variants(first: 1) {
+            edges {
+              node {
+                id
+                availableForSale
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const fetchShopifyProducts = async (limit = 10) => {
+  // Debug environment variables
+  console.log('🔍 SHOPIFY_DOMAIN:', SHOPIFY_DOMAIN);
+  console.log('🔍 STOREFRONT_TOKEN:', STOREFRONT_TOKEN ? 'Token loaded' : 'Token missing');
+  
+  if (!SHOPIFY_DOMAIN || !STOREFRONT_TOKEN) {
+    console.error('❌ Missing Shopify configuration');
+    return [];
+  }
+
+  try {
+    const url = `https://${SHOPIFY_DOMAIN}/api/2023-10/graphql.json`;
+    console.log('🔍 Making request to:', url);
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: shopifyHeaders,
+      body: JSON.stringify({
+        query: PRODUCTS_QUERY,
+        variables: { first: limit }
+      })
+    });
+
+    console.log('🔍 Response status:', response.status);
+    const data = await response.json();
+    console.log('🔍 Response data:', data);
+
+    if (data.errors) {
+      console.error('❌ GraphQL errors:', data.errors);
+      return [];
+    }
+
+    return data.data.products.edges.map((edge: any) => ({
+      id: edge.node.id,
+      title: edge.node.title,
+      description: edge.node.description,
+      price: parseFloat(edge.node.priceRange.minVariantPrice.amount),
+      currency: edge.node.priceRange.minVariantPrice.currencyCode,
+      image: edge.node.images.edges[0]?.node.url || '',
+      available: edge.node.variants.edges[0]?.node.availableForSale || false,
+      handle: edge.node.handle
+    }));
+  } catch (error) {
+    console.error('❌ Error fetching Shopify products:', error);
+    return [];
+  }
+};
+
 export default VoidShopAPI;
