@@ -7,6 +7,15 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const handleBuyNow = () => {
+    // Create Shopify buy URL
+    const shopifyDomain = import.meta.env.VITE_SHOPIFY_DOMAIN;
+    const buyUrl = `https://${shopifyDomain}/products/${product.handle}`;
+    
+    // Open Shopify product page in new tab
+    window.open(buyUrl, '_blank');
+  };
+
   return (
     <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700 hover:border-purple-500 transition-all duration-300 hover:shadow-purple-500/20">
       {/* Product Image */}
@@ -42,7 +51,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           )}
         </div>
         
-        <button className="w-full mt-3 bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded transition-colors duration-200">
+        <button 
+          onClick={handleBuyNow}
+          className="w-full mt-3 bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded transition-colors duration-200"
+        >
           Buy Now
         </button>
       </div>
