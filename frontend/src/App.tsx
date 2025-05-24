@@ -9,7 +9,7 @@ import HomePage from './pages/HomePage';
 import ApparelPage from './pages/ApparelPage';
 import MusicPage from './pages/MusicPage';
 import AccessoriesPage from './pages/AccessoriesPage';
-import ProductDetailPage from './pages/ProductDetail';
+import ProductDetailPage from './pages/ProductDetailPage';
 import SuccessPage from './pages/SuccessPage';
 
 function App() {

@@ -29,7 +29,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           fontSize: '20px'
         }}
       >
-        CLICK ME TO GO TO: {product.title}
+        CLICK ME TO GO TO: {product.title} - WEBHOOK TEST
       </h1>
       
       <img 
