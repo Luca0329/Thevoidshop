@@ -43,6 +43,11 @@ app.get('/mystical-status', (req, res) => {
   });
 });
 
+// Add a simple test endpoint
+app.get('/', (req, res) => {
+  res.json({ message: 'Mystical backend is running!', timestamp: new Date().toISOString() });
+});
+
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🌙 Mystical backend running on port ${PORT}`);
