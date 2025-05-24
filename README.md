@@ -77,7 +77,7 @@ SHOPIFY_SHOP_DOMAIN=your-shop.myshopify.com
 SHOPIFY_ACCESS_TOKEN=your_access_token
 
 # Server Configuration
-PORT=3000
+PORT=8080
 NODE_ENV=production
 ```
 
