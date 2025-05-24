@@ -54,27 +54,18 @@ export class VoidShopAPI {
     } catch (error) {
       console.error('💀 API Error:', error);
       
-      // Always try Railway as fallback
-      try {
-        console.log('🔄 Trying Railway fallback...');
-        const response = await fetch('https://thevoidshop.railway.app/mystical-status', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          mode: 'cors'
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          console.log('✅ Railway fallback successful:', data);
-          return data;
-        }
-      } catch (backupError) {
-        console.error('💀 Railway fallback failed:', backupError);
-      }
+      // Return local calculation as fallback
+      const now = new Date();
+      const dayOfYear = Math.floor((now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
+      const constellationIndex = Math.floor((dayOfYear / 2.5) % 12);
+      const constellations = ['Capricorn ♑', 'Aquarius ♒', 'Pisces ♓', 'Aries ♈', 'Taurus ♉', 'Gemini ♊', 'Cancer ♋', 'Leo ♌', 'Virgo ♍', 'Libra ♎', 'Scorpio ♏', 'Sagittarius ♐'];
       
-      return null;
+      return {
+        currentMoonPhase: 'new-moon',
+        mysticalEnergy: constellations[constellationIndex],
+        status: 'mystical backup active',
+        timestamp: now.toISOString()
+      };
     }
   }
 
