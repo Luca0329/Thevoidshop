@@ -12,7 +12,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
 
   const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation when clicking add to cart
+    e.preventDefault();
     e.stopPropagation();
     addToCart(product);
     alert(`${product.title} added to cart!`);
