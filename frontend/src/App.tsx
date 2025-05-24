@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
+import { CartProvider } from './context/CartContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import MusicPlayer from './components/MusicPlayer';
@@ -15,6 +16,7 @@ function App() {
   return (
     <Router>
       <AppProvider>
+        <CartProvider>
           <div className="min-h-screen bg-black text-white">
             <Header />
             <Routes>
@@ -26,6 +28,7 @@ function App() {
             <Footer />
             <MusicPlayer />
           </div>
+        </CartProvider>
       </AppProvider>
     </Router>
   );

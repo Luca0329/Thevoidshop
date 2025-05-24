@@ -3,14 +3,18 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Disc3, Menu, X, ShoppingCart, User } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import MoonPhaseDisplay from './MoonPhaseDisplay';
+import { useCart } from '../context/CartContext';
+import CartDropdown from './CartDropdown';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const { state, toggleAdmin } = useAppContext();
   const location = useLocation();
   const navigate = useNavigate();
+  const { getTotalItems } = useCart();
 
   const categories = [
     { id: 'all', label: 'All', path: '/' },
@@ -18,6 +22,8 @@ const Header: React.FC = () => {
     { id: 'music', label: 'Music', path: '/music' },
     { id: 'accessories', label: 'Accessories', path: '/accessories' }
   ];
+
+  const totalItems = getTotalItems();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,7 +50,7 @@ const Header: React.FC = () => {
               <MoonPhaseDisplay />
             </div>
 
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation and Cart */}
             <div className="hidden md:flex items-center space-x-8">
               <nav className="flex space-x-8">
                 <Link to="/" className="hover:text-purple-400 transition-colors">Home</Link>
@@ -52,6 +58,20 @@ const Header: React.FC = () => {
                 <Link to="/apparel" className="hover:text-purple-400 transition-colors">Apparel</Link>
                 <Link to="/accessories" className="hover:text-purple-400 transition-colors">Accessories</Link>
               </nav>
+              
+              <div className="relative">
+                <button 
+                  onClick={() => setIsCartOpen(!isCartOpen)}
+                  className="flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors"
+                >
+                  <ShoppingCart size={20} />
+                  {totalItems > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      {totalItems}
+                    </span>
+                  )}
+                </button>
+              </div>
             </div>
 
             {/* Mobile Menu Button */}
@@ -79,6 +99,8 @@ const Header: React.FC = () => {
           )}
         </div>
       </header>
+
+      <CartDropdown isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </>
   );
 };

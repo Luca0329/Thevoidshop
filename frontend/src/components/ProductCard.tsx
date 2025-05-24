@@ -12,8 +12,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const handleAddToCart = () => {
     addToCart(product);
-    // Optional: Show a toast notification
     alert(`${product.title} added to cart!`);
+  };
+
+  const handleBuyNow = () => {
+    const shopifyDomain = import.meta.env.VITE_SHOPIFY_DOMAIN;
+    const buyUrl = `https://${shopifyDomain}/products/${product.handle}`;
+    window.open(buyUrl, '_blank');
   };
 
   return (
