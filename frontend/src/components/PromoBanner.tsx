@@ -2,9 +2,12 @@ import React from 'react';
 
 const PromoBanner: React.FC = () => {
   return (
-    <div className="promo-banner">
-      <h2>Special Offer!</h2>
-      <p>Get 20% off on all items this week!</p>
+    <div className="w-full bg-red-900/20 backdrop-blur-sm border-y border-red-500/30 py-1 overflow-hidden">
+      <div className="animate-marquee whitespace-nowrap">
+        <span className="text-red-400/80 font-bold text-base tracking-wider uppercase">
+          🔥 SCEPTER'S "DRUNKEN MESSIAH" OUT NOW • AVAILABLE ON TAPE OR DIGITAL • 🔥 SCEPTER'S "DRUNKEN MESSIAH" OUT NOW • AVAILABLE ON TAPE OR DIGITAL • 
+        </span>
+      </div>
     </div>
   );
 };
