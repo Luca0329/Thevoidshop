@@ -106,3 +106,5 @@ const Header: React.FC = () => {
 };
 
 export default Header;
+
+// Check if the header has any overlays or positioned elements that extend over the cards

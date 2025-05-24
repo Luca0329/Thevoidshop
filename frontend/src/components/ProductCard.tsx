@@ -22,6 +22,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const handleCardClick = (e: React.MouseEvent) => {
     console.log('🎯 Card clicked!', product.handle);
     console.log('🎯 Event target:', e.target);
+    console.log('🎯 Current target:', e.currentTarget);
+    console.log('🎯 Event bubbles:', e.bubbles);
+    console.log('🎯 Event default prevented:', e.defaultPrevented);
+    
+    // Check for parent interference
+    const target = e.target as HTMLElement;
+    console.log('🎯 Target classes:', target.className);
+    console.log('🎯 Target computed style pointer-events:', getComputedStyle(target).pointerEvents);
     
     // Build the URL directly without eval() or string construction
     const productUrl = `/product/${product.handle}`;

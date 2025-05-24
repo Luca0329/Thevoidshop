@@ -30,4 +30,7 @@ const HomePage: React.FC = () => {
   );
 };
 
+// Check if there are any overlays, wrappers, or containers that might block clicks
+// Look for CSS properties like pointer-events: none, z-index issues, or positioned elements
+
 export default HomePage;
