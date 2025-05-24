@@ -12,15 +12,46 @@ interface CartDropdownProps {
 const CartDropdown: React.FC<CartDropdownProps> = ({ isOpen, onClose, onMouseEnter, onMouseLeave }) => {
   const { items, updateQuantity, removeFromCart, getTotalPrice, clearCart } = useCart();
 
-  const handleCheckout = () => {
-    const shopifyDomain = import.meta.env.VITE_SHOPIFY_DOMAIN;
-    
-    // For multiple items, just redirect to the first product page
-    const firstItem = items[0];
-    const productUrl = `https://${shopifyDomain}/products/${firstItem.handle}`;
-    
-    window.open(productUrl, '_blank');
-    onClose();
+  const handleCheckout = async () => {
+    try {
+      console.log('🛒 Starting checkout with items:', items);
+      console.log('🛒 API URL:', import.meta.env.VITE_API_URL);
+      
+      // Create Stripe checkout session
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/create-checkout`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: items.map(item => ({
+            id: item.id,
+            title: item.title,
+            price: item.price,
+            quantity: item.quantity,
+            handle: item.handle
+          }))
+        })
+      });
+
+      console.log('🛒 Response status:', response.status);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('🛒 Response error:', errorText);
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+
+      const data = await response.json();
+      console.log('🛒 Response data:', data);
+      
+      if (data.url) {
+        window.location.href = data.url; // Redirect to Stripe Checkout
+      } else {
+        throw new Error('No checkout URL received');
+      }
+    } catch (error) {
+      console.error('🛒 Checkout error:', error);
+      alert(`Checkout failed: ${error.message}`);
+    }
   };
 
   if (!isOpen) return null;
@@ -38,71 +69,72 @@ const CartDropdown: React.FC<CartDropdownProps> = ({ isOpen, onClose, onMouseEnt
             Your Cart
           </h3>
           <button onClick={onClose} className="text-gray-400 hover:text-white">
+            <X size={20} />
+          </button>
+        </div>
 
         <div className="max-h-64 overflow-y-auto">
           {items.length === 0 ? (
             <div className="p-8 text-center text-gray-400">
               Your cart is empty
             </div>
-          ) : (            <X size={20} />
+          ) : (
             items.map(item => (
               <div key={item.id} className="p-4 border-b border-gray-700 flex items-center gap-3">
                 <img 
-                  src={item.image}  overflow-y-auto">
-                  alt={item.title}ength === 0 ? (
-                  className="w-12 h-12 object-cover rounded"v className="p-8 text-center text-gray-400">
-                />y
+                  src={item.image} 
+                  alt={item.title}
+                  className="w-12 h-12 object-cover rounded"
+                />
                 
                 <div className="flex-1 min-w-0">
                   <h4 className="text-sm font-medium text-white truncate">{item.title}</h4>
-                  <p className="text-purple-400 font-semibold">${item.price}</p>lassName="p-4 border-b border-gray-700 flex items-center gap-3">
+                  <p className="text-purple-400 font-semibold">${item.price}</p>
                 </div>
-src={item.image} 
-                <div className="flex items-center gap-2">  alt={item.title}
-                  <button ver rounded"
+
+                <div className="flex items-center gap-2">
+                  <button 
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
                     className="text-gray-400 hover:text-white"
-                  >lassName="flex-1 min-w-0">
-                    <Minus size={16} />                  <h4 className="text-sm font-medium text-white truncate">{item.title}</h4>
-                  </button>bold">${item.price}</p>
+                  >
+                    <Minus size={16} />
+                  </button>
                   <span className="w-8 text-center">{item.quantity}</span>
                   <button 
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    className="text-gray-400 hover:text-white"button 
-                  >teQuantity(item.id, item.quantity - 1)}
-                    <Plus size={16} />me="text-gray-400 hover:text-white"
+                    className="text-gray-400 hover:text-white"
+                  >
+                    <Plus size={16} />
                   </button>
-                </div> size={16} />
+                </div>
 
-                <button tity}</span>
-                  onClick={() => removeFromCart(item.id)}button 
-                  className="text-red-400 hover:text-red-300"ateQuantity(item.id, item.quantity + 1)}
-                >me="text-gray-400 hover:text-white"
+                <button 
+                  onClick={() => removeFromCart(item.id)}
+                  className="text-red-400 hover:text-red-300"
+                >
                   <X size={16} />
-                </button>                    <Plus size={16} />
-              </div>on>
+                </button>
+              </div>
             ))
           )}
-        </div>button 
-removeFromCart(item.id)}
-        {items.length > 0 && (me="text-red-400 hover:text-red-300"
+        </div>
+
+        {items.length > 0 && (
           <div className="p-4 border-t border-gray-700">
-            <div className="flex justify-between items-center mb-3">    <X size={16} />
-              <span className="font-bold">Total: ${getTotalPrice().toFixed(2)}</span>    </button>
-            </div></div>
-            <button             ))
+            <div className="flex justify-between items-center mb-3">
+              <span className="font-bold">Total: ${getTotalPrice().toFixed(2)}</span>
+            </div>
+            <button 
               onClick={handleCheckout}
               className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded transition-colors"
             >
               Checkout
-            </button>ssName="p-4 border-t border-gray-700">
-          </div>ssName="flex justify-between items-center mb-3">
-        )}ld">Total: ${getTotalPrice().toFixed(2)}</span>
+            </button>
+          </div>
+        )}
       </div>
-    </>button 
-  );{handleCheckout}
-};me="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded transition-colors"
-
-export default CartDropdown;    Checkout
+    </>
+  );
+};
 
 export default CartDropdown;

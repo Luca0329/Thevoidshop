@@ -9,6 +9,8 @@ import HomePage from './pages/HomePage';
 import ApparelPage from './pages/ApparelPage';
 import MusicPage from './pages/MusicPage';
 import AccessoriesPage from './pages/AccessoriesPage';
+import ProductDetailPage from './pages/ProductDetail';
+import SuccessPage from './pages/SuccessPage';
 
 function App() {
   console.log('🌙 App component rendering...');
@@ -24,6 +26,8 @@ function App() {
               <Route path="/apparel" element={<ApparelPage />} />
               <Route path="/music" element={<MusicPage />} />
               <Route path="/accessories" element={<AccessoriesPage />} />
+              <Route path="/product/:handle" element={<ProductDetailPage />} />
+              <Route path="/success" element={<SuccessPage />} />
             </Routes>
             <Footer />
             <MusicPlayer />
