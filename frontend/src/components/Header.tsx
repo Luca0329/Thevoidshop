@@ -7,6 +7,7 @@ import MoonPhaseDisplay from './MoonPhaseDisplay';
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { state, toggleAdmin } = useAppContext();
   const location = useLocation();
   const navigate = useNavigate();
@@ -39,98 +40,45 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header
-      className={`bg-black/90 backdrop-blur-sm border-b border-purple-500/20 sticky top-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'shadow-lg' : ''
-      }`}
-    >
+    <header className="bg-black text-white shadow-lg sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          {/* Left side - Logo with Moon Phase immediately to its right */}
-          <div className="flex items-center space-x-4">
-            <Link to="/" className="text-2xl font-bold text-purple-400">
-              TheVoidShop
-            </Link>
-            <MoonPhaseDisplay />
-          </div>
+          {/* Logo */}
+          <Link to="/" className="text-2xl font-bold text-purple-400">
+            THE VOID SHOP
+          </Link>
 
-          {/* Right side - Navigation stays on the far right */}
-          <nav className="flex items-center space-x-6">
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              {categories.map((category) => (
-                <Link
-                  key={category.id}
-                  to={category.path}
-                  className={`text-base font-medium transition-colors duration-200 hover:text-purple-400 ${
-                    location.pathname === category.path ? 'text-purple-500' : 'text-gray-300'
-                  }`}
-                >
-                  {category.label}
-                </Link>
-              ))}
-            </div>
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex space-x-8">
+            <Link to="/" className="hover:text-purple-400 transition-colors">Home</Link>
+            <Link to="/music" className="hover:text-purple-400 transition-colors">Music</Link>
+            <Link to="/apparel" className="hover:text-purple-400 transition-colors">Apparel</Link>
+            <Link to="/accessories" className="hover:text-purple-400 transition-colors">Accessories</Link>
+          </nav>
 
-            {/* Search input if it exists */}
-            <input
-              id="header-search"
-              name="search"
-              type="search"
-              placeholder="Search the void..."
-              className="px-4 py-2 bg-black/50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500"
-            />
+          {/* Mobile Menu Button */}
+          <button 
+            className="md:hidden text-white focus:outline-none"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+            </svg>
+          </button>
+        </div>
 
-            {/* Right Side Controls */}
-            <div className="flex items-center space-x-6">
-              <button 
-                className="text-gray-300 hover:text-purple-400 transition-colors duration-200"
-                onClick={handleProfileClick}
-                title="Customer Account"
-              >
-                <User size={22} className={state.isAdmin ? "text-green-400" : "text-gray-300"} />
-              </button>
-              <button 
-                className="text-gray-300 hover:text-purple-400 transition-colors duration-200 relative"
-                onClick={handleCartClick}
-                title="Shopping Cart"
-              >
-                <ShoppingCart size={22} />
-                {/* Cart item count will be dynamically updated by Shopify */}
-                <span className="absolute -top-2 -right-2 bg-purple-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  0
-                </span>
-              </button>
-              <button 
-                className="md:hidden text-gray-300 focus:outline-none"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-              >
-                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
+        {/* Mobile Navigation */}
+        {isMobileMenuOpen && (
+          <nav className="md:hidden mt-4 pb-4 border-t border-gray-700">
+            <div className="flex flex-col space-y-2 pt-4">
+              <Link to="/" className="py-2 hover:text-purple-400 transition-colors">Home</Link>
+              <Link to="/music" className="py-2 hover:text-purple-400 transition-colors">Music</Link>
+              <Link to="/apparel" className="py-2 hover:text-purple-400 transition-colors">Apparel</Link>
+              <Link to="/accessories" className="py-2 hover:text-purple-400 transition-colors">Accessories</Link>
             </div>
           </nav>
-        </div>
-      </div>
-
-      {/* Mobile Navigation */}
-      <div 
-        className={`md:hidden absolute top-20 left-0 right-0 bg-black bg-opacity-95 shadow-lg transition-all duration-300 ${
-          isMenuOpen ? 'max-h-64 py-4' : 'max-h-0 overflow-hidden'
-        }`}
-      >
-        <div className="container mx-auto px-4 flex flex-col space-y-4">
-          {categories.map((category) => (
-            <Link
-              key={category.id}
-              to={category.path}
-              className={`text-left py-2 text-base font-medium transition-colors duration-200 hover:text-purple-400 ${
-                location.pathname === category.path ? 'text-purple-500' : 'text-gray-300'
-              }`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              {category.label}
-            </Link>
-          ))}
-        </div>
+        )}
       </div>
     </header>
   );
