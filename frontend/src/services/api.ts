@@ -3,6 +3,8 @@ const API_BASE_URL = import.meta.env.VITE_API_URL ||
     ? 'https://thevoidshop.railway.app'
     : 'http://localhost:3000');
 
+console.log('🔮 API Base URL:', API_BASE_URL);
+
 export interface VoidShopProduct {
   id: number;
   title: string;
@@ -31,7 +33,7 @@ export interface VoidShopProduct {
 export class VoidShopAPI {
   static async getMysticalStatus() {
     try {
-      const url = API_BASE_URL + '/mystical-status';
+      const url = `${API_BASE_URL}/mystical-status`;
       console.log('🔮 Fetching from:', url);
       
       const response = await fetch(url, {
@@ -39,12 +41,11 @@ export class VoidShopAPI {
         headers: {
           'Content-Type': 'application/json',
         },
-        mode: 'cors',
-        credentials: 'include'
+        mode: 'cors'
       });
       
       if (!response.ok) {
-        throw new Error('HTTP error! status: ' + response.status);
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
       
       const data = await response.json();
@@ -53,9 +54,9 @@ export class VoidShopAPI {
     } catch (error) {
       console.error('💀 API Error:', error);
       
-      // Always try Railway as backup
+      // Always try Railway as fallback
       try {
-        console.log('🔄 Trying Railway backup...');
+        console.log('🔄 Trying Railway fallback...');
         const response = await fetch('https://thevoidshop.railway.app/mystical-status', {
           method: 'GET',
           headers: {
@@ -66,11 +67,11 @@ export class VoidShopAPI {
         
         if (response.ok) {
           const data = await response.json();
-          console.log('✅ Railway backup successful:', data);
+          console.log('✅ Railway fallback successful:', data);
           return data;
         }
       } catch (backupError) {
-        console.error('💀 Railway backup failed:', backupError);
+        console.error('💀 Railway fallback failed:', backupError);
       }
       
       return null;
