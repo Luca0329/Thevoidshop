@@ -19,14 +19,25 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     alert(`${product.title} added to cart!`);
   };
 
-  const handleCardClick = () => {
-    console.log('Card clicked, navigating to:', `/product/${product.handle}`);
-    navigate(`/product/${product.handle}`);
+  const handleCardClick = (e: React.MouseEvent) => {
+    console.log('🎯 Card clicked!', product.handle);
+    console.log('🎯 Event target:', e.target);
+    console.log('🎯 Navigate function:', typeof navigate);
+    
+    try {
+      navigate(`/product/${product.handle}`);
+      console.log('🎯 Navigation called successfully');
+    } catch (error) {
+      console.error('🎯 Navigation failed:', error);
+    }
   };
 
   return (
     <div 
       onClick={handleCardClick}
+      onMouseDown={() => console.log('🎯 Mouse down on card')}
+      onMouseUp={() => console.log('🎯 Mouse up on card')}
+      style={{ pointerEvents: 'auto' }}
       className="cursor-pointer block bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700 hover:border-purple-500 transition-all duration-300 hover:shadow-purple-500/20 group"
     >
       {/* Product Image */}
