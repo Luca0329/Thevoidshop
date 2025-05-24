@@ -7,4 +7,4 @@
 /*
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https: data:; style-src 'self' 'unsafe-inline' https: data:; connect-src 'self' https://*.myshopify.com https://*.up.railway.app https: wss:; img-src 'self' https: data:; font-src 'self' https: data:; media-src 'self' https: data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none';
+*/
