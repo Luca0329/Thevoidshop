@@ -13,16 +13,13 @@ const CartDropdown: React.FC<CartDropdownProps> = ({ isOpen, onClose, onMouseEnt
   const { items, updateQuantity, removeFromCart, getTotalPrice, clearCart } = useCart();
 
   const handleCheckout = () => {
-    // Simple redirect to Shopify store for checkout
     const shopifyDomain = import.meta.env.VITE_SHOPIFY_DOMAIN;
-    const checkoutUrl = `https://${shopifyDomain}/cart`;
     
-    // Add items to Shopify cart URL
-    const cartItems = items.map(item => `${item.handle}:${item.quantity}`).join(',');
-    const finalUrl = `https://${shopifyDomain}/cart/add?items=${cartItems}`;
+    // For multiple items, just redirect to the first product page
+    const firstItem = items[0];
+    const productUrl = `https://${shopifyDomain}/products/${firstItem.handle}`;
     
-    window.open(finalUrl, '_blank');
-    clearCart();
+    window.open(productUrl, '_blank');
     onClose();
   };
 
@@ -41,72 +38,71 @@ const CartDropdown: React.FC<CartDropdownProps> = ({ isOpen, onClose, onMouseEnt
             Your Cart
           </h3>
           <button onClick={onClose} className="text-gray-400 hover:text-white">
-            <X size={20} />
-          </button>
-        </div>
 
         <div className="max-h-64 overflow-y-auto">
           {items.length === 0 ? (
             <div className="p-8 text-center text-gray-400">
               Your cart is empty
             </div>
-          ) : (
+          ) : (            <X size={20} />
             items.map(item => (
               <div key={item.id} className="p-4 border-b border-gray-700 flex items-center gap-3">
                 <img 
-                  src={item.image} 
-                  alt={item.title}
-                  className="w-12 h-12 object-cover rounded"
-                />
+                  src={item.image}  overflow-y-auto">
+                  alt={item.title}ength === 0 ? (
+                  className="w-12 h-12 object-cover rounded"v className="p-8 text-center text-gray-400">
+                />y
                 
                 <div className="flex-1 min-w-0">
                   <h4 className="text-sm font-medium text-white truncate">{item.title}</h4>
-                  <p className="text-purple-400 font-semibold">${item.price}</p>
+                  <p className="text-purple-400 font-semibold">${item.price}</p>lassName="p-4 border-b border-gray-700 flex items-center gap-3">
                 </div>
-
-                <div className="flex items-center gap-2">
-                  <button 
+src={item.image} 
+                <div className="flex items-center gap-2">  alt={item.title}
+                  <button ver rounded"
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
                     className="text-gray-400 hover:text-white"
-                  >
-                    <Minus size={16} />
-                  </button>
+                  >lassName="flex-1 min-w-0">
+                    <Minus size={16} />                  <h4 className="text-sm font-medium text-white truncate">{item.title}</h4>
+                  </button>bold">${item.price}</p>
                   <span className="w-8 text-center">{item.quantity}</span>
                   <button 
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    className="text-gray-400 hover:text-white"
-                  >
-                    <Plus size={16} />
+                    className="text-gray-400 hover:text-white"button 
+                  >teQuantity(item.id, item.quantity - 1)}
+                    <Plus size={16} />me="text-gray-400 hover:text-white"
                   </button>
-                </div>
+                </div> size={16} />
 
-                <button 
-                  onClick={() => removeFromCart(item.id)}
-                  className="text-red-400 hover:text-red-300"
-                >
+                <button tity}</span>
+                  onClick={() => removeFromCart(item.id)}button 
+                  className="text-red-400 hover:text-red-300"ateQuantity(item.id, item.quantity + 1)}
+                >me="text-gray-400 hover:text-white"
                   <X size={16} />
-                </button>
-              </div>
+                </button>                    <Plus size={16} />
+              </div>on>
             ))
           )}
-        </div>
-
-        {items.length > 0 && (
+        </div>button 
+removeFromCart(item.id)}
+        {items.length > 0 && (me="text-red-400 hover:text-red-300"
           <div className="p-4 border-t border-gray-700">
-            <div className="flex justify-between items-center mb-3">
-              <span className="font-bold">Total: ${getTotalPrice().toFixed(2)}</span>
-            </div>
-            <button 
+            <div className="flex justify-between items-center mb-3">    <X size={16} />
+              <span className="font-bold">Total: ${getTotalPrice().toFixed(2)}</span>    </button>
+            </div></div>
+            <button             ))
               onClick={handleCheckout}
               className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded transition-colors"
             >
               Checkout
-            </button>
-          </div>
-        )}
+            </button>ssName="p-4 border-t border-gray-700">
+          </div>ssName="flex justify-between items-center mb-3">
+        )}ld">Total: ${getTotalPrice().toFixed(2)}</span>
       </div>
-    </>
-  );
-};
+    </>button 
+  );{handleCheckout}
+};me="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded transition-colors"
+
+export default CartDropdown;    Checkout
 
 export default CartDropdown;
