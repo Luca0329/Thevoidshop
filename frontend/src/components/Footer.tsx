@@ -93,6 +93,8 @@ const Footer: React.FC = () => {
             <div className="flex">
               <input 
                 type="email" 
+                id="newsletter-email"
+                name="email"
                 placeholder="Your email" 
                 className="bg-gray-800 text-white px-4 py-2 rounded-l-md focus:outline-none focus:ring-1 focus:ring-purple-500 w-full"
               />
