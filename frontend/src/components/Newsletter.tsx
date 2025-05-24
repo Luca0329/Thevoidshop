@@ -20,19 +20,23 @@ const Newsletter: React.FC = () => {
             and early access to limited edition merch. Step into the void and never miss a beat.
           </p>
           
-          <div className="flex flex-col sm:flex-row w-full max-w-lg gap-3">
-            <input 
+          <form className="max-w-md mx-auto flex gap-4">
+            <input
               id="newsletter-email"
               name="email"
               type="email"
-              placeholder="Your email address"
-              className="flex-1 px-4 py-3 bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder="Enter your email"
+              autoComplete="email"
+              className="flex-1 px-4 py-3 bg-black/50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500"
               required
             />
-            <button className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-md transition-colors duration-200">
-              Subscribe
+            <button
+              type="submit"
+              className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors"
+            >
+              Join
             </button>
-          </div>
+          </form>
           
           <p className="text-gray-500 text-sm mt-4">
             By subscribing, you agree to our Privacy Policy and consent to receive updates.

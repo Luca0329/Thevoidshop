@@ -8,5 +8,12 @@
   to = "/index.html"
   status = 200
 
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; object-src 'none';"
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+
 [build.environment]
   NODE_VERSION = "18"
