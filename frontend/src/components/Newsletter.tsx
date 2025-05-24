@@ -22,9 +22,12 @@ const Newsletter: React.FC = () => {
           
           <div className="flex flex-col sm:flex-row w-full max-w-lg gap-3">
             <input 
+              id="newsletter-email"
+              name="email"
               type="email"
               placeholder="Your email address"
               className="flex-1 px-4 py-3 bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+              required
             />
             <button className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-md transition-colors duration-200">
               Subscribe

@@ -71,6 +71,15 @@ const Header: React.FC = () => {
               ))}
             </div>
 
+            {/* Search input if it exists */}
+            <input
+              id="header-search"
+              name="search"
+              type="search"
+              placeholder="Search the void..."
+              className="px-4 py-2 bg-black/50 border border-purple-500/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500"
+            />
+
             {/* Right Side Controls */}
             <div className="flex items-center space-x-6">
               <button 
