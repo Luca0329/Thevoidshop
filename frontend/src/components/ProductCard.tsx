@@ -1,19 +1,19 @@
 import React from 'react';
 import { Product } from '../types';
 import { ShoppingCart } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 
 interface ProductCardProps {
   product: Product;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const handleBuyNow = () => {
-    // Create Shopify buy URL
-    const shopifyDomain = import.meta.env.VITE_SHOPIFY_DOMAIN;
-    const buyUrl = `https://${shopifyDomain}/products/${product.handle}`;
-    
-    // Open Shopify product page in new tab
-    window.open(buyUrl, '_blank');
+  const { addToCart } = useCart();
+
+  const handleAddToCart = () => {
+    addToCart(product);
+    // Optional: Show a toast notification
+    alert(`${product.title} added to cart!`);
   };
 
   return (
@@ -52,10 +52,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </div>
         
         <button 
-          onClick={handleBuyNow}
-          className="w-full mt-3 bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded transition-colors duration-200"
+          onClick={handleAddToCart}
+          className="w-full mt-3 bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center gap-2"
         >
-          Buy Now
+          <ShoppingCart size={18} />
+          Add to Cart
         </button>
       </div>
     </div>

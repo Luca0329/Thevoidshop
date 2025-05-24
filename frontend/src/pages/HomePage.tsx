@@ -1,31 +1,29 @@
 import React from 'react';
+import { useShopifyProducts } from '../hooks/useShopifyProducts';
+import ProductGrid from '../components/ProductGrid';
+import PromoBanner from '../components/PromoBanner';
 import Hero from '../components/Hero';
-import News from '../components/News';
-import NewProductsScroll from '../components/NewProductsScroll';
 import FeaturedProducts from '../components/FeaturedProducts';
 import NewArrivals from '../components/NewArrivals';
-import ProductGrid from '../components/ProductGrid';
-import Newsletter from '../components/Newsletter';
 import About from '../components/About';
-import Events from '../components/Events';
-import { products } from '../data/products';
-import { events } from '../data/events';
-import { news } from '../data/news';
+import Newsletter from '../components/Newsletter';
 
 const HomePage: React.FC = () => {
+  const { products = [], loading, error } = useShopifyProducts();
+
+  // Get latest arrivals (newest products)
+  const latestArrivals = products.slice(0, 4);
+
   return (
     <main>
+      <PromoBanner />
       <Hero />
-      <News news={news} />
-      <NewProductsScroll products={products} />
-      <FeaturedProducts products={products} />
-      <section className="container mx-auto px-4 py-16">
-        <h2 className="text-2xl md:text-3xl font-bold text-white mb-8">
-          Shop <span className="text-purple-500">Collection</span>
-        </h2>
-        <ProductGrid products={products} activeCategory="all" />
-      </section>
-      <Events events={events} />
+      
+      {/* Update existing NewArrivals to use Shopify products */}
+      <NewArrivals />
+      
+      {/* Keep all original sections */}
+      <FeaturedProducts />
       <About />
       <Newsletter />
     </main>

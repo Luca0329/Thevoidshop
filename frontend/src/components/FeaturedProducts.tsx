@@ -1,13 +1,15 @@
 import React from 'react';
 import { Product } from '../types';
 import { ArrowRight } from 'lucide-react';
+import { useShopifyProducts } from '../hooks/useShopifyProducts';
 
-interface FeaturedProductsProps {
-  products: Product[];
-}
-
-const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) => {
-  const featuredProducts = products.filter(product => product.featured);
+const FeaturedProducts: React.FC = () => {
+  const { products = [], loading, error } = useShopifyProducts();
+  
+  const featuredProducts = products.filter(product => product.featured || false).slice(0, 3);
+  
+  if (loading) return <div>Loading featured products...</div>;
+  if (error) return <div>Error loading products</div>;
   
   if (featuredProducts.length === 0) return null;
   
@@ -24,7 +26,7 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products }) => {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {featuredProducts.slice(0, 3).map(product => (
+        {featuredProducts.map(product => (
           <div key={product.id} className="group relative overflow-hidden bg-gray-900 rounded-lg h-[350px]">
             <img 
               src={product.image} 

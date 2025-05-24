@@ -2,32 +2,35 @@ import React from 'react';
 import { Product } from '../types';
 import ProductCard from './ProductCard';
 import { ArrowRight } from 'lucide-react';
+import { useShopifyProducts } from '../hooks/useShopifyProducts';
 
-interface NewArrivalsProps {
-  products: Product[];
-}
-
-const NewArrivals: React.FC<NewArrivalsProps> = ({ products }) => {
-  const newProducts = products.filter(product => product.new);
+const NewArrivals: React.FC = () => {
+  const { products = [], loading, error } = useShopifyProducts();
   
-  if (newProducts.length === 0) return null;
+  const newArrivals = products.slice(0, 4);
   
   return (
-    <section className="container mx-auto px-4 py-16">
-      <div className="flex items-center justify-between mb-8">
-        <h2 className="text-2xl md:text-3xl font-bold text-white">
-          New <span className="text-green-500">Arrivals</span>
+    <section className="py-16 bg-gray-900">
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl font-bold text-center mb-12">
+          Latest <span className="text-purple-500">Arrivals</span>
         </h2>
-        <button className="flex items-center space-x-2 text-green-400 hover:text-green-300 transition-colors duration-200">
-          <span>View all</span>
-          <ArrowRight size={16} />
-        </button>
-      </div>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {newProducts.map(product => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+        
+        {loading ? (
+          <div className="flex justify-center py-12">
+            <div className="text-purple-400 animate-pulse">Summoning new arrivals...</div>
+          </div>
+        ) : error ? (
+          <div className="text-red-500 text-center py-12">Error loading products</div>
+        ) : newArrivals.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {newArrivals.map((product: Product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-gray-400 text-center py-12">No new arrivals yet.</div>
+        )}
       </div>
     </section>
   );

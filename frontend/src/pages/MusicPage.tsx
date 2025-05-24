@@ -16,14 +16,23 @@ const MusicPage: React.FC = () => {
   // Filter products for music-related items
   const musicProducts = products.filter(product => {
     console.log('🎵 Checking product:', product.title, 'Tags:', product.tags);
-    const tags = product.tags?.toLowerCase() || '';
+    
+    // Handle tags as either array or string
+    let tagsString = '';
+    if (Array.isArray(product.tags)) {
+      tagsString = product.tags.join(' ').toLowerCase();
+    } else if (typeof product.tags === 'string') {
+      tagsString = product.tags.toLowerCase();
+    }
+    
     const title = product.title?.toLowerCase() || '';
     const description = product.description?.toLowerCase() || '';
     
-    return tags.includes('music') || 
-           tags.includes('album') || 
-           tags.includes('digital') ||
-           tags.includes('tape') ||
+    return tagsString.includes('music') || 
+           tagsString.includes('album') || 
+           tagsString.includes('digital') ||
+           tagsString.includes('tape') ||
+           tagsString.includes('cassette') ||
            title.includes('music') ||
            description.includes('music');
   });
@@ -52,7 +61,12 @@ const MusicPage: React.FC = () => {
             {error}
           </div>
         ) : (
-          <ProductGrid products={musicProducts} activeCategory="music" />
+          <>
+            <div className="mb-4 text-gray-400">
+              Total products: {products.length} | Music products: {musicProducts.length}
+            </div>
+            <ProductGrid products={musicProducts} activeCategory="all" />
+          </>
         )}
       </div>
     </main>
