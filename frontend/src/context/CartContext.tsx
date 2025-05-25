@@ -78,11 +78,11 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       console.log('🛒 Starting checkout with items:', items);
       
-      // Make sure API URL is correct
       const apiUrl = import.meta.env.VITE_API_URL || 'https://thevoidshop-production.up.railway.app';
       console.log('🛒 Using API URL:', apiUrl);
       
-      const response = await fetch(`${apiUrl}/api/create-checkout`, {
+      // Remove health check since it doesn't exist
+      const response = await fetch(`${apiUrl}/create-checkout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -102,8 +102,11 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }),
       });
 
+      console.log('🛒 Checkout response status:', response.status);
+      
       if (!response.ok) {
         const errorText = await response.text();
+        console.log('🛒 Error response body:', errorText);
         throw new Error(`Checkout failed: ${response.status} - ${errorText}`);
       }
 
