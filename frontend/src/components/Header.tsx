@@ -40,10 +40,17 @@ const Header: React.FC = () => {
       <header className="bg-black text-white shadow-lg sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            {/* Logo */}
-            <Link to="/" className="text-2xl font-bold text-purple-400">
-              THE VOID SHOP
-            </Link>
+            {/* Logo and Brand */}
+            <div className="flex items-center gap-3">
+              <img 
+                src="/logo.png" 
+                alt="The Void Shop Logo" 
+                className="w-16 h-16 object-contain"
+              />
+              <Link to="/" className="text-2xl font-bold hover:text-purple-400 transition-colors">
+                THE VOID SHOP
+              </Link>
+            </div>
 
             {/* Moon Phase Display - Desktop */}
             <div className="hidden md:block">
