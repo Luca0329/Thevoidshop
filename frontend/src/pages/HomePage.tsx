@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { fetchStripeProducts, AutoProduct } from '../services/stripeApi';
+import { products as fallbackProducts } from '../data/products';
 import ProductCard from '../components/ProductCard';
 import Hero from '../components/Hero';
 import About from '../components/About';
 import Newsletter from '../components/Newsletter';
 
 const HomePage: React.FC = () => {
-  const [products, setProducts] = useState<AutoProduct[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,9 +16,16 @@ const HomePage: React.FC = () => {
         console.log('🛍️ Loading products from Stripe...');
         const stripeProducts = await fetchStripeProducts();
         console.log('🛍️ Products loaded:', stripeProducts);
-        setProducts(stripeProducts);
+        
+        if (stripeProducts.length > 0) {
+          setProducts(stripeProducts);
+        } else {
+          console.log('🛍️ No Stripe products, using fallback');
+          setProducts(fallbackProducts);
+        }
       } catch (error) {
-        console.error('🛍️ Error loading products:', error);
+        console.error('🛍️ Error loading products, using fallback:', error);
+        setProducts(fallbackProducts);
       } finally {
         setLoading(false);
       }
