@@ -10,9 +10,23 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Import routes
+const checkoutRoutes = require('./routes/checkout');
+
+// Use routes
+app.use('/', checkoutRoutes);
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({
+    message: "Mystical backend is running!",
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Mystical status endpoint
