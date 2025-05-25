@@ -31,7 +31,6 @@ export interface AutoProduct {
 
 export const fetchStripeProducts = async (): Promise<AutoProduct[]> => {
   try {
-    // Use your backend to fetch from Stripe (keeps secret key secure)
     const apiUrl = import.meta.env.VITE_API_URL || 'https://thevoidshop-production.up.railway.app';
     
     const response = await fetch(`${apiUrl}/stripe-products`);
@@ -46,7 +45,7 @@ export const fetchStripeProducts = async (): Promise<AutoProduct[]> => {
       title: product.name,
       handle: product.metadata.handle || product.name.toLowerCase().replace(/\s+/g, '-'),
       description: product.description || '',
-      price: product.default_price.unit_amount / 100, // Convert from cents
+      price: product.default_price.unit_amount / 100,
       image: product.images[0] || '/images/placeholder.jpg',
       available: product.metadata.available !== 'false',
       category: (product.metadata.category as any) || 'accessories',
