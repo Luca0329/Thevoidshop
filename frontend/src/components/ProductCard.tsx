@@ -1,9 +1,9 @@
 import React from 'react';
-import { Product } from '../data/products';
 import { ShoppingCart } from 'lucide-react';
+import { formatPrice } from '../data/products';
 
 interface ProductCardProps {
-  product: Product;
+  product: any; // Accept both old and new product formats
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
@@ -39,7 +39,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         
         <div className="flex items-center justify-between mb-3">
           <span className="text-xl font-semibold text-purple-400">
-            ${product.price}
+            {formatPrice(product.price)}
           </span>
           
           {product.available ? (
@@ -49,20 +49,29 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           )}
         </div>
         
-        {/* Stripe Buy Button */}
+        {/* Show different buttons based on product type */}
         {product.available && (
-          <div 
-            onClick={(e) => e.stopPropagation()}
-            dangerouslySetInnerHTML={{
-              __html: `
-                <stripe-buy-button
-                  buy-button-id="${product.stripeBuyButtonId}"
-                  publishable-key="${import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY}"
-                >
-                </stripe-buy-button>
-              `
-            }}
-          />
+          <div onClick={(e) => e.stopPropagation()}>
+            {product.stripeBuyButtonId ? (
+              // Use Stripe buy button
+              <div 
+                dangerouslySetInnerHTML={{
+                  __html: `
+                    <stripe-buy-button
+                      buy-button-id="${product.stripeBuyButtonId}"
+                      publishable-key="${import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY}"
+                    >
+                    </stripe-buy-button>
+                  `
+                }}
+              />
+            ) : (
+              // Fallback button for products without Stripe buttons
+              <button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded transition-colors">
+                View Product
+              </button>
+            )}
+          </div>
         )}
       </div>
     </div>
