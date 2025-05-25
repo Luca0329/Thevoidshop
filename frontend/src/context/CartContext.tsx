@@ -81,7 +81,11 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const apiUrl = import.meta.env.VITE_API_URL || 'https://thevoidshop-production.up.railway.app';
       console.log('🛒 Using API URL:', apiUrl);
       
-      // Remove health check since it doesn't exist
+      // Test if API is reachable first
+      console.log('🛒 Testing API connection...');
+      const testResponse = await fetch(`${apiUrl}/health`);
+      console.log('🛒 Health check response:', testResponse.status);
+      
       const response = await fetch(`${apiUrl}/create-checkout`, {
         method: 'POST',
         headers: {
