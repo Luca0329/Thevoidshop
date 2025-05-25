@@ -34,3 +34,7 @@ const HomePage: React.FC = () => {
 // Look for CSS properties like pointer-events: none, z-index issues, or positioned elements
 
 export default HomePage;
+
+<div className="text-center mb-12 border-b border-gray-700 pb-8">
+          <h1 className="text-5xl font-bold mb-4 text-white">THE VOID SHOP - DEPLOY TEST</h1>
+        </div>
