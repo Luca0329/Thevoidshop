@@ -1,76 +1,40 @@
-import { Product } from '../types';
+export interface Product {
+  id: string;
+  title: string;
+  handle: string;
+  description: string;
+  price: number;
+  image: string;
+  available: boolean;
+  category: 'apparel' | 'music' | 'accessories';
+  stripeBuyButtonId: string;
+  tags: string[];
+}
 
 export const products: Product[] = [
   {
-    id: '1',
-    name: 'Void Essence T-Shirt',
-    price: 29.99,
-    image: 'https://images.pexels.com/photos/9594627/pexels-photo-9594627.jpeg',
-    category: 'apparel',
-    description: 'Black t-shirt with minimalist void design. 100% cotton.',
-    featured: true
-  },
-  {
-    id: '2',
-    name: 'Cosmic Noise Vinyl',
-    price: 24.99,
-    image: 'https://images.pexels.com/photos/1626481/pexels-photo-1626481.jpeg',
-    category: 'music',
-    description: 'Limited edition cosmic noise compilation on heavyweight vinyl.',
-    new: true
-  },
-  {
-    id: '3',
-    name: 'Darkness Rising Hoodie',
-    price: 49.99,
-    image: 'https://images.pexels.com/photos/6311387/pexels-photo-6311387.jpeg',
-    category: 'apparel',
-    description: 'Heavy cotton blend hoodie with embroidered void symbol.',
-    featured: true
-  },
-  {
-    id: '4',
-    name: 'Underground Echoes CD',
-    price: 14.99,
-    image: 'https://images.pexels.com/photos/1021876/pexels-photo-1021876.jpeg',
-    category: 'music',
-    description: 'Compilation of underground artists exclusive to The Void Shop.',
-    new: true
-  },
-  {
-    id: '5',
-    name: 'Void Patch Set',
-    price: 12.99,
-    image: 'https://images.pexels.com/photos/1850021/pexels-photo-1850021.jpeg',
+    id: 'scepter-drunken-messiah',
+    title: 'SCEPTER "DRUNKEN MESSIAH"',
+    handle: 'scepter-drunken-messiah',
+    description: 'Mystical scepter for the void walkers',
+    price: 45.0,
+    image: '/images/scepter.jpg',
+    available: true,
     category: 'accessories',
-    description: 'Set of 5 embroidered patches featuring void-inspired designs.',
-    featured: true
+    stripeBuyButtonId: 'buy_btn_1RSabyPDdyqJyXlCXekxL2Uv',
+    tags: ['mystical', 'accessories', 'scepter']
   },
   {
-    id: '6',
-    name: 'Shadow Realm Beanie',
-    price: 19.99,
-    image: 'https://images.pexels.com/photos/4725133/pexels-photo-4725133.jpeg',
+    id: 'cph-raw-dogs-cardiel',
+    title: 'CPH RAW DOGS "CARDIEL" ORIGINAL',
+    handle: 'cph-raw-dogs-cardiel-original',
+    description: 'Original Cardiel design from CPH Raw Dogs collection',
+    price: 35.0,
+    image: '/images/cardiel.jpg',
+    available: true,
     category: 'apparel',
-    description: 'Black knit beanie with embroidered void logo.',
-    new: true
+    stripeBuyButtonId: 'PUT_ACTUAL_BUY_BUTTON_ID_HERE', // Replace with real ID
+    tags: ['apparel', 'original', 'cardiel']
   },
-  {
-    id: '7',
-    name: 'Eternal Night Backpack',
-    price: 39.99,
-    image: 'https://images.pexels.com/photos/1545499/pexels-photo-1545499.jpeg',
-    category: 'accessories',
-    description: 'Black canvas backpack with subtle void detailing.',
-    featured: true
-  },
-  {
-    id: '8',
-    name: 'Void Sticker Pack',
-    price: 8.99,
-    image: 'https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg',
-    category: 'accessories',
-    description: 'Pack of 10 die-cut vinyl stickers with various void designs.',
-    new: true
-  }
+  // Add your third product here
 ];

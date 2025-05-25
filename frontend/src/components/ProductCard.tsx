@@ -1,22 +1,12 @@
 import React from 'react';
-import { Product } from '../types';
+import { Product } from '../data/products';
 import { ShoppingCart } from 'lucide-react';
-import { useCart } from '../context/CartContext';
 
 interface ProductCardProps {
   product: Product;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { addToCart } = useCart();
-
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    addToCart(product);
-    alert(`${product.title} added to cart!`);
-  };
-
   const handleCardClick = () => {
     window.location.href = `/product/${product.handle}`;
   };
@@ -59,18 +49,21 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           )}
         </div>
         
-        <button 
-          onClick={handleAddToCart}
-          disabled={!product.available}
-          className={`w-full py-2 px-4 rounded transition-colors duration-200 flex items-center justify-center gap-2 ${
-            product.available 
-              ? 'bg-purple-600 hover:bg-purple-700 text-white' 
-              : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-          }`}
-        >
-          <ShoppingCart size={18} />
-          {product.available ? 'Add to Cart' : 'Out of Stock'}
-        </button>
+        {/* Stripe Buy Button */}
+        {product.available && (
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            dangerouslySetInnerHTML={{
+              __html: `
+                <stripe-buy-button
+                  buy-button-id="${product.stripeBuyButtonId}"
+                  publishable-key="${import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY}"
+                >
+                </stripe-buy-button>
+              `
+            }}
+          />
+        )}
       </div>
     </div>
   );

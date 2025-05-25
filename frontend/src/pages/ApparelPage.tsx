@@ -1,42 +1,27 @@
-import React from 'react';
-import { useShopifyProducts } from '../hooks/useShopifyProducts';
-import ProductGrid from '../components/ProductGrid';
+import React, { useEffect, useState } from 'react';
+import { fetchStripeProducts, AutoProduct } from '../services/stripeApi';
+import ProductCard from '../components/ProductCard';
 
 const ApparelPage: React.FC = () => {
-  const { products, loading, error } = useShopifyProducts();
-  
-  // Filter products for apparel-related items only (exclude music)
-  const apparelProducts = products.filter(product => {
-    // Handle tags as either array or string
-    let tagsString = '';
-    if (Array.isArray(product.tags)) {
-      tagsString = product.tags.join(' ').toLowerCase();
-    } else if (typeof product.tags === 'string') {
-      tagsString = product.tags.toLowerCase();
-    }
-    
-    const title = product.title?.toLowerCase() || '';
-    const productType = product.productType?.toLowerCase() || '';
-    
-    // Exclude music-related products
-    const isMusicProduct = tagsString.includes('music') || 
-                          tagsString.includes('album') || 
-                          tagsString.includes('digital') ||
-                          tagsString.includes('tape') ||
-                          tagsString.includes('cassette') ||
-                          title.includes('music');
-    
-    // Include apparel-related products
-    const isApparelProduct = tagsString.includes('apparel') ||
-                            tagsString.includes('clothing') ||
-                            tagsString.includes('shirt') ||
-                            tagsString.includes('hoodie') ||
-                            productType.includes('apparel') ||
-                            title.includes('shirt') ||
-                            title.includes('hoodie');
-    
-    return !isMusicProduct && (isApparelProduct || (!isMusicProduct && products.length > 0));
-  });
+  const [products, setProducts] = useState<AutoProduct[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const allProducts = await fetchStripeProducts();
+        // Filter for apparel only
+        const apparelProducts = allProducts.filter(p => p.category === 'apparel');
+        setProducts(apparelProducts);
+      } catch (error) {
+        console.error('Error loading apparel:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProducts();
+  }, []);
 
   return (
     <main className="pt-24 min-h-screen bg-black text-white">
@@ -58,8 +43,17 @@ const ApparelPage: React.FC = () => {
               🌙 Loading mystical apparel...
             </div>
           </div>
+        ) : products.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {products.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
         ) : (
-          <ProductGrid products={apparelProducts} />
+          <div className="col-span-4 text-center py-12">
+            <h3 className="text-2xl text-white mb-4">No Apparel Found</h3>
+            <p className="text-gray-400">Add products with category="apparel" in Stripe</p>
+          </div>
         )}
       </div>
     </main>

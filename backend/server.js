@@ -12,9 +12,11 @@ app.use(express.json());
 
 // Import routes
 const checkoutRoutes = require('./routes/checkout');
+const stripeRoutes = require('./routes/stripe');
 
 // Use routes
 app.use('/', checkoutRoutes);
+app.use('/', stripeRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
