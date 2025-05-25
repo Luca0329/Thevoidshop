@@ -17,6 +17,7 @@ interface CartContextType {
   clearCart: () => void;
   getTotalPrice: () => number;
   getTotalItems: () => number;
+  checkout: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -73,6 +74,53 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return items.reduce((total, item) => total + item.quantity, 0);
   };
 
+  const checkout = async () => {
+    try {
+      console.log('🛒 Starting checkout with items:', items);
+      
+      // Make sure API URL is correct
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://thevoidshop-production.up.railway.app';
+      console.log('🛒 Using API URL:', apiUrl);
+      
+      const response = await fetch(`${apiUrl}/api/checkout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          items: items.map(item => ({
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: item.title,
+                images: item.image ? [item.image] : [],
+              },
+              unit_amount: Math.round(item.price * 100),
+            },
+            quantity: item.quantity,
+          })),
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Checkout failed: ${response.status} - ${errorText}`);
+      }
+
+      const { url } = await response.json();
+      console.log('🛒 Redirect URL:', url);
+      
+      if (url) {
+        window.location.href = url;
+      } else {
+        throw new Error('No checkout URL received');
+      }
+    } catch (error) {
+      console.error('🛒 Checkout error:', error);
+      alert(`Checkout failed: ${error.message}`);
+    }
+  };
+
   return (
     <CartContext.Provider value={{
       items,
@@ -81,7 +129,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       updateQuantity,
       clearCart,
       getTotalPrice,
-      getTotalItems
+      getTotalItems,
+      checkout
     }}>
       {children}
     </CartContext.Provider>
