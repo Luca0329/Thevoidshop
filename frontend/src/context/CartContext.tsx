@@ -82,7 +82,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const apiUrl = import.meta.env.VITE_API_URL || 'https://thevoidshop-production.up.railway.app';
       console.log('🛒 Using API URL:', apiUrl);
       
-      const response = await fetch(`${apiUrl}/api/checkout`, {
+      const response = await fetch(`${apiUrl}/api/create-checkout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
