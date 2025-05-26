@@ -11,6 +11,7 @@ import ApparelPage from './pages/ApparelPage';
 import MusicPage from './pages/MusicPage';
 import AccessoriesPage from './pages/AccessoriesPage';
 import ProductDetail from './pages/ProductDetail';
+import SuccessPage from './pages/SuccessPage';
 
 function App() {
   console.log('🌙 App component rendering...');
@@ -28,6 +29,7 @@ function App() {
               <Route path="/music" element={<MusicPage />} />
               <Route path="/accessories" element={<AccessoriesPage />} />
               <Route path="/product/:handle" element={<ProductDetail />} />
+              <Route path="/success" element={<SuccessPage />} />
             </Routes>
             <Footer />
             <MusicPlayer />

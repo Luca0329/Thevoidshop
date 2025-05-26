@@ -23,7 +23,7 @@ export const products: Product[] = [
     image2: '/images/drunkenmessiah.jpeg',
     available: true,
     category: 'music',
-    stripeBuyButtonId: 'buy_btn_1RSeJJA5a5swpvmvVmZ4UP9M',
+    stripeBuyButtonId: "buy_btn_XXXXXXXXXXXXXXXXX", // Replace with real ID from Stripe
     tags: ['cassette', 'scepter', 'underground', 'music']
   },
   {
@@ -36,7 +36,7 @@ export const products: Product[] = [
     image2: '/images/cardiel2.jpeg',
     available: true,
     category: 'apparel',
-    stripeBuyButtonId: 'buy_btn_1RSeKvA5a5swpvmvdzZuI1ww',
+    stripeBuyButtonId: "buy_btn_XXXXXXXXXXXXXXXXX", // Replace with real ID from Stripe
     tags: ['t-shirt', 'cardiel', 'streetwear', 'apparel']
   },
   {
@@ -45,8 +45,11 @@ export const products: Product[] = [
     handle: 'vaabnet-det-hellige-mod',
     description: 'Vaabnet\'s "Det Hellige Mod" - a powerful underground release channeling raw Danish energy and mystical themes.',
     price: 200.00,
-    image: '/images/dethelligemod.jpeg'
-    // no image2 for this item
+    image: '/images/dethelligemod.jpeg',
+    available: true,
+    category: 'music',
+    stripeBuyButtonId: "buy_btn_XXXXXXXXXXXXXXXXX", // Replace with real ID from Stripe
+    tags: ['vaabnet', 'danish', 'underground', 'music']
   }
 ];
 

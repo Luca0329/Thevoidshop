@@ -1,5 +1,4 @@
 import React from 'react';
-import { ShoppingCart } from 'lucide-react';
 import { formatPrice } from '../data/products';
 
 interface ProductCardProps {
@@ -42,7 +41,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       
       {/* Product Info */}
       <div className="p-4">
-        <h3 className="text-lg font-bold text-white mb-2 line-clamp-2 group-hover:text-purple-300 transition-colors">
+        <h3 className="text-lg font-bold text-white mb-2 truncate group-hover:text-purple-300 transition-colors">
           {product.title}
         </h3>
         
@@ -60,19 +59,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         
         {/* Action Buttons */}
         {product.available && (
-          <div onClick={(e) => e.stopPropagation()} className="space-y-2">
-            {/* Add to Cart Button */}
-            <button 
-              onClick={() => {
-                // Simple cart functionality
-                alert(`${product.title} added to cart!`);
-              }}
-              className="w-full bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded transition-colors flex items-center justify-center gap-2"
-            >
-              <ShoppingCart size={16} />
-              Add to Cart
-            </button>
-            
+          <div onClick={(e) => e.stopPropagation()}>
             {/* Stripe Buy Button */}
             <div 
               dangerouslySetInnerHTML={{
