@@ -5,6 +5,7 @@ export interface Product {
   description: string;
   price: number;
   image: string;
+  image2?: string;    // new hover image
   available: boolean;
   category: 'apparel' | 'music' | 'accessories';
   stripeBuyButtonId: string;
@@ -18,7 +19,8 @@ export const products: Product[] = [
     handle: 'scepters-drunken-messiah-cassette',
     description: 'Raw underground cassette from Scepter\'s acclaimed "Drunken Messiah" release. Limited edition physical format.',
     price: 70.00,
-    image: 'https://via.placeholder.com/400x400/1a1a1a/8b5cf6?text=SCEPTER+CASSETTE',
+    image: '/images/drunkenmessiah1.jpeg',
+    image2: '/images/drunkenmessiah.jpeg',
     available: true,
     category: 'music',
     stripeBuyButtonId: 'buy_btn_1RSeJJA5a5swpvmvVmZ4UP9M',
@@ -30,7 +32,8 @@ export const products: Product[] = [
     handle: 'cph-raw-dogs-cardiel-tshirt',
     description: 'Original Cardiel design t-shirt from CPH Raw Dogs collection. Premium quality streetwear with underground aesthetic.',
     price: 350.00,
-    image: 'https://via.placeholder.com/400x400/1a1a1a/8b5cf6?text=CARDIEL+TSHIRT',
+    image: '/images/cardiel1.jpeg',
+    image2: '/images/cardiel2.jpeg',
     available: true,
     category: 'apparel',
     stripeBuyButtonId: 'buy_btn_1RSeKvA5a5swpvmvdzZuI1ww',
@@ -42,11 +45,8 @@ export const products: Product[] = [
     handle: 'vaabnet-det-hellige-mod',
     description: 'Vaabnet\'s "Det Hellige Mod" - a powerful underground release channeling raw Danish energy and mystical themes.',
     price: 200.00,
-    image: 'https://via.placeholder.com/400x400/1a1a1a/8b5cf6?text=VAABNET+ALBUM',
-    available: true,
-    category: 'music',
-    stripeBuyButtonId: 'buy_btn_1RSeLjA5a5swpvmvTFzszDaV',
-    tags: ['album', 'danish', 'underground', 'vaabnet']
+    image: '/images/dethelligemod.jpeg'
+    // no image2 for this item
   }
 ];
 

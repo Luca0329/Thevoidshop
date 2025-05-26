@@ -17,17 +17,26 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       className="cursor-pointer block bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-gray-700 hover:border-purple-500 transition-all duration-300 hover:shadow-purple-500/20 group"
     >
       {/* Product Image */}
-      <div className="aspect-square bg-gray-900 relative overflow-hidden">
-        {product.image ? (
-          <img 
-            src={product.image} 
-            alt={product.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          />
+      <div className="aspect-square bg-gray-900 relative overflow-hidden group">
+        {product.image2 ? (
+          <>
+            <img
+              src={product.image}
+              alt={product.title}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:opacity-0"
+            />
+            <img
+              src={product.image2}
+              alt={product.title}
+              className="w-full h-full object-cover absolute top-0 left-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+            />
+          </>
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-500">
-            No Image
-          </div>
+          <img
+            src={product.image}
+            alt={product.title}
+            className="w-full h-full object-cover"
+          />
         )}
       </div>
       
@@ -49,28 +58,33 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           )}
         </div>
         
-        {/* Show different buttons based on product type */}
+        {/* Action Buttons */}
         {product.available && (
-          <div onClick={(e) => e.stopPropagation()}>
-            {product.stripeBuyButtonId ? (
-              // Use Stripe buy button
-              <div 
-                dangerouslySetInnerHTML={{
-                  __html: `
-                    <stripe-buy-button
-                      buy-button-id="${product.stripeBuyButtonId}"
-                      publishable-key="${import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY}"
-                    >
-                    </stripe-buy-button>
-                  `
-                }}
-              />
-            ) : (
-              // Fallback button for products without Stripe buttons
-              <button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded transition-colors">
-                View Product
-              </button>
-            )}
+          <div onClick={(e) => e.stopPropagation()} className="space-y-2">
+            {/* Add to Cart Button */}
+            <button 
+              onClick={() => {
+                // Simple cart functionality
+                alert(`${product.title} added to cart!`);
+              }}
+              className="w-full bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded transition-colors flex items-center justify-center gap-2"
+            >
+              <ShoppingCart size={16} />
+              Add to Cart
+            </button>
+            
+            {/* Stripe Buy Button */}
+            <div 
+              dangerouslySetInnerHTML={{
+                __html: `
+                  <stripe-buy-button
+                    buy-button-id="${product.stripeBuyButtonId}"
+                    publishable-key="${import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY}"
+                  >
+                  </stripe-buy-button>
+                `
+              }}
+            />
           </div>
         )}
       </div>

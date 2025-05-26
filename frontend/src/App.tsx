@@ -28,7 +28,6 @@ function App() {
               <Route path="/music" element={<MusicPage />} />
               <Route path="/accessories" element={<AccessoriesPage />} />
               <Route path="/product/:handle" element={<ProductDetail />} />
-              {/* <Route path="/success" element={<SuccessPage />} /> */}
             </Routes>
             <Footer />
             <MusicPlayer />

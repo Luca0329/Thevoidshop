@@ -1,117 +1,62 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Disc3, Menu, X, ShoppingCart, User } from 'lucide-react';
+import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
-import MoonPhaseDisplay from './MoonPhaseDisplay';
-import { useCart } from '../context/CartContext';
-import CartDropdown from './CartDropdown';
+import { ShoppingCart, Menu, X } from 'lucide-react';
 
 const Header: React.FC = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const { state, toggleAdmin } = useAppContext();
+  const { state } = useAppContext();
   const location = useLocation();
-  const navigate = useNavigate();
-  const { getTotalItems } = useCart();
 
-  const categories = [
-    { id: 'all', label: 'All', path: '/' },
-    { id: 'apparel', label: 'Apparel', path: '/apparel' },
-    { id: 'music', label: 'Music', path: '/music' },
-    { id: 'accessories', label: 'Accessories', path: '/accessories' }
+  const navItems = [
+    { name: 'Home', path: '/' },
+    { name: 'Apparel', path: '/apparel' },
+    { name: 'Music', path: '/music' },
+    { name: 'Accessories', path: '/accessories' }
   ];
 
-  const totalItems = getTotalItems();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
   return (
-    <>
-      <header className="bg-black text-white shadow-lg sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo and Brand */}
-            <div className="flex items-center gap-3">
-              <img 
-                src="/logo.png" 
-                alt="The Void Shop Logo" 
-                className="w-16 h-16 object-contain"
-              />
-              <Link to="/" className="text-2xl font-bold hover:text-purple-400 transition-colors">
-                THE VOID SHOP
-              </Link>
-            </div>
+    <header className="bg-black border-b border-gray-800 sticky top-0 z-50">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          <a href="/" className="flex items-center">
+            <span className="text-xl font-bold text-white">THE VOID SHOP</span>
+          </a>
 
-            {/* Moon Phase Display - Desktop */}
-            <div className="hidden md:block">
-              <MoonPhaseDisplay />
-            </div>
+          <nav className="hidden md:flex items-center space-x-8">
+            {navItems.map((item) => (
+              <a
+                key={item.name}
+                href={item.path}
+                className={`text-white hover:text-purple-400 transition-colors ${
+                  location.pathname === item.path ? 'text-purple-400' : ''
+                }`}
+              >
+                {item.name}
+              </a>
+            ))}
+          </nav>
 
-            {/* Desktop Navigation and Cart */}
-            <div className="hidden md:flex items-center space-x-8">
-              <nav className="flex space-x-8">
-                <Link to="/" className="hover:text-purple-400 transition-colors">Home</Link>
-                <Link to="/music" className="hover:text-purple-400 transition-colors">Music</Link>
-                <Link to="/apparel" className="hover:text-purple-400 transition-colors">Apparel</Link>
-                <Link to="/accessories" className="hover:text-purple-400 transition-colors">Accessories</Link>
-              </nav>
-              
-              <div className="relative">
-                <button 
-                  onClick={() => setIsCartOpen(!isCartOpen)}
-                  className="flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors"
-                >
-                  <ShoppingCart size={20} />
-                  {totalItems > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                      {totalItems}
-                    </span>
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button 
-              className="md:hidden text-white focus:outline-none"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setIsCartOpen(!isCartOpen)}
+              className="text-white hover:text-purple-400 transition-colors relative"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                  d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
-              </svg>
+              <ShoppingCart size={24} />
+            </button>
+
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden text-white hover:text-purple-400 transition-colors"
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
-
-          {/* Mobile Navigation */}
-          {isMobileMenuOpen && (
-            <nav className="md:hidden mt-4 pb-4 border-t border-gray-700">
-              <div className="flex flex-col space-y-2 pt-4">
-                <Link to="/" className="py-2 hover:text-purple-400 transition-colors">Home</Link>
-                <Link to="/music" className="py-2 hover:text-purple-400 transition-colors">Music</Link>
-                <Link to="/apparel" className="py-2 hover:text-purple-400 transition-colors">Apparel</Link>
-                <Link to="/accessories" className="py-2 hover:text-purple-400 transition-colors">Accessories</Link>
-              </div>
-            </nav>
-          )}
         </div>
-      </header>
-
-      <CartDropdown isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
-    </>
+      </div>
+    </header>
   );
 };
 
 export default Header;
-
-// Check if the header has any overlays or positioned elements that extend over the cards

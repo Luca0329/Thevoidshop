@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { products } from '../data/products';
+import { products, formatPrice } from '../data/products';
 import { Product } from '../data/products';
 
 const ProductDetail: React.FC = () => {
   const { handle } = useParams<{ handle: string }>();
   const [product, setProduct] = useState<Product | null>(null);
-  const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -14,6 +13,14 @@ const ProductDetail: React.FC = () => {
     setProduct(foundProduct || null);
     setLoading(false);
     window.scrollTo(0, 0);
+    
+    // Ensure Stripe script is loaded
+    if (!document.querySelector('script[src="https://js.stripe.com/v3/buy-button.js"]')) {
+      const script = document.createElement('script');
+      script.src = 'https://js.stripe.com/v3/buy-button.js';
+      script.async = true;
+      document.head.appendChild(script);
+    }
   }, [handle]);
 
   if (loading) {
@@ -62,7 +69,7 @@ const ProductDetail: React.FC = () => {
             <div>
               <h1 className="text-4xl font-bold mb-4 text-white">{product.title}</h1>
               <div className="flex items-center justify-between bg-gray-800 rounded-lg p-4 border border-gray-700 mb-6">
-                <p className="text-3xl text-purple-400 font-bold">${product.price}</p>
+                <p className="text-3xl text-purple-400 font-bold">{formatPrice(product.price)}</p>
                 <div className="flex items-center gap-2">
                   <div className={`w-4 h-4 rounded-full ${product.available ? 'bg-green-500' : 'bg-red-500'}`}></div>
                   <span className={`font-medium ${product.available ? 'text-green-400' : 'text-red-400'}`}>
@@ -82,30 +89,30 @@ const ProductDetail: React.FC = () => {
             {product.available && (
               <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
                 <h3 className="text-xl font-bold mb-4 text-purple-300">Purchase</h3>
-                <div 
-                  dangerouslySetInnerHTML={{
-                    __html: `
-                      <stripe-buy-button
-                        buy-button-id="${product.stripeBuyButtonId}"
-                        publishable-key="${import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY}"
-                      >
-                      </stripe-buy-button>
-                    `
-                  }}
-                />
-              </div>
-            )}
-
-            {/* Tags */}
-            {product.tags.length > 0 && (
-              <div>
-                <h3 className="text-lg font-bold mb-3 text-purple-300">Tags</h3>
-                <div className="flex flex-wrap gap-2">
-                  {product.tags.map(tag => (
-                    <span key={tag} className="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">
-                      {tag}
-                    </span>
-                  ))}
+                
+                <div className="stripe-buy-button-container">
+                  <div 
+                    dangerouslySetInnerHTML={{
+                      __html: `
+                        <stripe-buy-button
+                          buy-button-id="${product.stripeBuyButtonId}"
+                          publishable-key="${import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY}"
+                        >
+                        </stripe-buy-button>
+                      `
+                    }}
+                  />
+                </div>
+                
+                <div className="mt-4">
+                  <a 
+                    href={`https://buy.stripe.com/test_${product.stripeBuyButtonId.replace('buy_btn_', '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full bg-purple-600 hover:bg-purple-700 text-white py-3 px-6 rounded text-center transition-colors"
+                  >
+                    Buy Now - {formatPrice(product.price)}
+                  </a>
                 </div>
               </div>
             )}
