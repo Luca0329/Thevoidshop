@@ -54,22 +54,29 @@ const Header: React.FC = () => {
     if (cart.length === 0) return;
     
     try {
+      console.log('🛒 Starting checkout with cart:', cart);
+      
       // Prepare line items for Stripe
       const lineItems = cart.map((item: any) => ({
         price_data: {
-          currency: 'dkk', // Using Danish Kroner
+          currency: 'dkk',
           product_data: {
             name: item.product.title,
             description: `Size: ${item.size}`,
             images: item.product.image ? [item.product.image] : [],
           },
-          unit_amount: Math.round(item.product.price * 100), // Convert to øre (cents)
+          unit_amount: Math.round(item.product.price * 100),
         },
         quantity: item.quantity,
       }));
 
-      // Call your backend to create checkout session
+      console.log('💰 Line items prepared:', lineItems);
+
+      // Use Railway backend for production
       const apiUrl = import.meta.env.VITE_API_URL || 'https://thevoidshop-production.up.railway.app';
+      
+      console.log('🌐 API URL:', apiUrl);
+      
       const response = await fetch(`${apiUrl}/create-checkout`, {
         method: 'POST',
         headers: {
@@ -78,18 +85,27 @@ const Header: React.FC = () => {
         body: JSON.stringify({ items: lineItems }),
       });
 
+      console.log('📡 Response status:', response.status);
+
       if (!response.ok) {
-        throw new Error('Failed to create checkout session');
+        const errorText = await response.text();
+        console.error('❌ Response error:', errorText);
+        throw new Error(`Failed to create checkout session: ${response.status} ${errorText}`);
       }
 
-      const { url } = await response.json();
+      const data = await response.json();
+      console.log('✅ Checkout response:', data);
       
-      // Redirect to Stripe checkout
-      window.location.href = url;
+      if (data.url) {
+        console.log('🔗 Redirecting to:', data.url);
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL received');
+      }
       
     } catch (error) {
-      console.error('Checkout error:', error);
-      alert('Checkout failed. Please try again.');
+      console.error('💥 Checkout error:', error);
+      alert(`Checkout failed: ${error.message}`);
     }
   };
 
